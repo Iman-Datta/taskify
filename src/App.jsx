@@ -1,9 +1,14 @@
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+
 function App() {
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-      <h1 className="text-4xl font-bold text-blue-400">
-        Taskify 🚀
-      </h1>
+    <div className="min-h-screen bg-white text-black pt-2">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
     </div>
   );
 }
