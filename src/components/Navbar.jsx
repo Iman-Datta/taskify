@@ -57,7 +57,7 @@ function Navbar() {
           </Link>
 
           <Link
-            to="/register"
+            to="/task"
             className="px-7 py-2.5 rounded-lg font-semibold text-white
              bg-gradient-to-r from-blue-600 to-blue-500
              hover:from-blue-700 hover:to-blue-600

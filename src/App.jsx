@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import CheckEmail from "./pages/CheckEmail";
+import Task from "./pages/Task";
 
 function App() {
   return (
@@ -11,7 +12,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/auth" element={<Auth />} />
-        <Route path="/checkEmail" element={<CheckEmail />} />
+        <Route path="/checkEmail" element={<CheckEmail />}/>
+        <Route path = "/task" element = {<Task/>}/>
       </Routes>
     </div>
   );

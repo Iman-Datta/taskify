@@ -18,7 +18,7 @@ function Home() {
         </p>
 
         <button
-          onClick={() => navigate("/dashboard")}
+          onClick={() => navigate("/task")}
           className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition"
         >
           Get Started
