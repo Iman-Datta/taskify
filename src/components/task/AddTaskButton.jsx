@@ -1,17 +1,12 @@
-function AddTaskButton() {
+function AddTaskButton({ onClick }) {
   return (
     <button
+    onClick={onClick}
       className="
-        flex items-center gap-2
-        bg-blue-600 text-white
-        px-4 py-2 rounded-xl
-        font-medium
-        hover:bg-blue-700
-        transition duration-200
-        shadow-sm hover:shadow-md
-      "
+    
+    w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 shadow-md hover:shadow-lg mb-10"
     >
-      <span className="text-lg">+</span>
+      <span className="text-xl font-semibold">+</span>
       Add Task
     </button>
   );

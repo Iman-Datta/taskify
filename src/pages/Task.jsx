@@ -3,10 +3,12 @@ import { useState } from "react";
 import TaskList from "../components/task/TaskList";
 import TaskHeader from "../components/task/TaskHeader";
 import AddTaskButton from "../components/task/AddTaskButton";
+import AddTaskForm from "../components/task/AddTaskForm";
 import TaskFilters from "../components/task/TaskFilters";
 import SearchBar from "../components/task/SearchBar";
 
 function Task() {
+  const [showForm, setShowForm] = useState(false);
   const [mockTasks, setTasks] = useState([
     {
       id: 1,
@@ -28,14 +30,20 @@ function Task() {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-100 p-20">
-        <TaskHeader count={mockTasks.length} />
+      <div className="bg-gray-100 px-6 py-10 max-w-5xl mx-auto">
+        <div className="pt-32">
+          <TaskHeader count={mockTasks.length} />
+          <AddTaskButton onClick={() => setShowForm(true)} />
+        </div>
+
+        {showForm && <AddTaskForm onCancel={() => setShowForm(false)} />}
+
+        <div className="flex justify-between items-center mb-8 gap-4">
+          <SearchBar />
+          <TaskFilters />
+        </div>
+
         <TaskList tasks={mockTasks} />
-        <AddTaskButton />
-      </div>
-      <div className="flex justify-between items-center mb-8 gap-4">
-        <SearchBar />
-        <TaskFilters />
       </div>
     </>
   );

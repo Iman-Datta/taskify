@@ -1,3 +1,5 @@
+import { Search } from "lucide-react";
+
 function SearchBar() {
   return (
     <div className="relative w-full max-w-md">
@@ -10,9 +12,7 @@ function SearchBar() {
           focus:outline-none focus:ring-2 focus:ring-blue-500
         "
       />
-      <span className="absolute left-3 top-2.5 text-gray-400">
-        🔍
-      </span>
+      <Search className="absolute left-3 top-2.5 text-gray-400 w-4 h-4" />
     </div>
   );
 }
