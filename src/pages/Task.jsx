@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import TaskList from "../components/task/TaskList";
 import TaskHeader from "../components/task/TaskHeader";
@@ -9,56 +9,100 @@ import SearchBar from "../components/task/SearchBar";
 
 function Task() {
   const [showForm, setShowForm] = useState(false);
+  const [tasks, setTasks] = useState([]);
 
-  const [mockTasks, setTasks] = useState([
-    {
-      id: 1,
-      title: "Math",
-      description: "Revise probability chapter",
-      priority: "medium",
-      dueDate: "Mar 5 • 4d 20h",
-      status: "todo",
-    },
-    {
-      id: 2,
-      title: "Physics",
-      description: "Solve numericals",
-      priority: "high",
-      dueDate: "Mar 2 • 2d left",
-      status: "todo",
-    },
-  ]);
+  // Fetch tasks from backend
+  useEffect(() => {
+    fetch("http://localhost:5000/tasks")
+      .then((res) => res.json())
+      .then((data) => {
+        const formatted = data.map((task) => ({
+          _id: task._id,
+          title: task.taskname,
+          priority: task.category,
+          dueDate: new Date(task.deadline).toLocaleDateString(),
+          status: task.status,
+        }));
 
-  // ✅ Toggle status
-  const toggleStatus = (id) => {
+        setTasks(formatted);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  // Toggle status
+  const toggleStatus = async (id) => {
+    const task = tasks.find((t) => t._id === id);
+    if (!task) return;
+
+    const newStatus =
+      task.status === "completed" ? "todo" : "completed";
+
+    const res = await fetch(
+      `http://localhost:5000/tasks/${id}/status`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      }
+    );
+
+    const updatedTask = await res.json();
+
+    const formatted = {
+      _id: updatedTask._id,
+      title: updatedTask.taskname,
+      priority: updatedTask.category,
+      dueDate: new Date(updatedTask.deadline).toLocaleDateString(),
+      status: updatedTask.status,
+    };
+
     setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id
-          ? {
-              ...task,
-              status: task.status === "completed" ? "todo" : "completed",
-            }
-          : task,
-      ),
+      prev.map((t) => (t._id === id ? formatted : t))
     );
   };
 
-  // ✅ Delete task
-  const deleteTask = (id) => {
-    setTasks((prev) => prev.filter((task) => task.id !== id));
+  // Delete task
+  const deleteTask = async (id) => {
+    await fetch(`http://localhost:5000/tasks/${id}`, {
+      method: "DELETE",
+    });
+
+    setTasks((prev) => prev.filter((task) => task._id !== id));
   };
 
-  // ✅ Add task from form
-  const addTask = (newTask) => {
-    setTasks((prev) => [...prev, newTask]);
+  // Add task from form
+  const addTask = async (newTask) => {
+    const res = await fetch("http://localhost:5000/tasks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        taskname: newTask.title,
+        category: newTask.priority,
+        deadline: new Date(),
+        status: "todo",
+      }),
+    });
+
+    const savedTask = await res.json();
+
+    const formatted = {
+      _id: savedTask._id,
+      title: savedTask.taskname,
+      priority: savedTask.category,
+      dueDate: new Date(savedTask.deadline).toLocaleDateString(),
+      status: savedTask.status,
+    };
+
+    setTasks((prev) => [formatted, ...prev]);
   };
 
   return (
     <div className="bg-zinc-950 px-6 py-10 max-w-5xl mx-auto min-h-screen">
       <div className="pt-32">
-        <TaskHeader count={mockTasks.length} />
-
-        {!showForm && <AddTaskButton onClick={() => setShowForm(true)} />}
+        <TaskHeader count={tasks.length} />
+        {!showForm && (
+          <AddTaskButton onClick={() => setShowForm(true)} />
+        )}
       </div>
 
       {showForm && (
@@ -76,7 +120,7 @@ function Task() {
       </div>
 
       <TaskList
-        tasks={mockTasks}
+        tasks={tasks}
         onToggleStatus={toggleStatus}
         onDelete={deleteTask}
       />

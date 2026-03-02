@@ -20,7 +20,7 @@ function TaskItem({ task, onToggleStatus, onDelete }) {
           {/* Controlled Checkbox */}
           <Checkbox
             checked={isCompleted}
-            onCheckedChange={() => onToggleStatus(task.id)}
+            onCheckedChange={() => onToggleStatus(task._id)}
             className="
               mt-1
               data-[state=checked]:bg-emerald-600
@@ -82,7 +82,7 @@ function TaskItem({ task, onToggleStatus, onDelete }) {
 
           {/* Delete Button */}
           <button
-            onClick={() => onDelete(task.id)}
+            onClick={() => onDelete(task._id)}
             className="
               text-zinc-500 hover:text-red-400
               transition
