@@ -7,10 +7,29 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
 import { Calendar as CalendarIcon } from "lucide-react";
 
-function AddTaskForm({ onCancel }) {
+function AddTaskForm({  onAddTask, onCancel }) {
   const [date, setDate] = useState(null);
+  const [formData, setFormData] = useState({
+    taskname: "",
+    description: "",
+    category: "",
+    deadline: "",
+    priority: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = () => {
+    onAddTask(formData);
+  };
 
   const inputStyle = `
     bg-zinc-900 border border-zinc-800
@@ -33,23 +52,54 @@ function AddTaskForm({ onCancel }) {
 
       <div className="flex flex-col gap-4">
         {/* Title */}
-        <input type="text" placeholder="Task title" className={inputStyle} />
+        <input
+          type="text"
+          name="taskname"
+          placeholder="Task title"
+          className={inputStyle}
+          value={formData.taskname}
+          onChange={handleChange}
+        />
 
         {/* Description */}
-        <textarea placeholder="Description" className={inputStyle} />
+        <textarea
+          placeholder="Description"
+          className={`${inputStyle} resize-none`}
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+        />
 
         {/* Priority + Date */}
         <div className="flex flex-col md:flex-row gap-4">
           {/* Priority */}
-          <select className={`flex-1 ${inputStyle}`}>
+          <select
+            name="priority"
+            className={`flex-1 ${inputStyle}`}
+            value={formData.priority}
+            onChange={handleChange}
+          >
             <option>No priority</option>
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
           </select>
 
+          <select
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            className={inputStyle}
+          >
+            <option value="">Select category</option>
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+            <option value="Study">Study</option>
+          </select>
+
           {/* Date Picker */}
           <Popover>
+            <label>Deadline</label>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
@@ -72,7 +122,10 @@ function AddTaskForm({ onCancel }) {
               <Calendar
                 mode="single"
                 selected={date}
-                onSelect={setDate}
+                onSelect={(selectedDate) => {
+                  setDate(selectedDate);
+                  setFormData({ ...formData, deadline: selectedDate }); // It is not a input field therefore I have to take the data manually
+                }}
                 className="rounded-lg border"
                 captionLayout="dropdown"
                 initialFocus
@@ -96,6 +149,7 @@ function AddTaskForm({ onCancel }) {
           </button>
 
           <button
+            onClick={handleSubmit}
             className="
               px-4 py-2 rounded-xl
               bg-emerald-600 hover:bg-emerald-500

@@ -1,7 +1,6 @@
 import TaskItem from "./TaskItem";
 
 function TaskList({ tasks, onToggleStatus, onDelete }) {
-  console.log(tasks)
   return (
     <div className="space-y-4">
       {tasks.map((task) => (

@@ -8,10 +8,10 @@ import TaskFilters from "../components/task/TaskFilters";
 import SearchBar from "../components/task/SearchBar";
 
 function Task() {
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(false); // Task form
   const [tasks, setTasks] = useState([]);
 
-  // Fetch tasks from backend
+  // It loads only ONCE (When component load first time)
   useEffect(() => {
     fetch("http://localhost:5000/tasks")
       .then((res) => res.json())
@@ -19,9 +19,11 @@ function Task() {
         const formatted = data.map((task) => ({
           _id: task._id,
           title: task.taskname,
-          priority: task.category,
-          dueDate: new Date(task.deadline).toLocaleDateString(),
+          description: task.description,
+          category: task.category,
           status: task.status,
+          deadline: new Date(task.deadline).toLocaleDateString(),
+          priority: task.priority,
         }));
 
         setTasks(formatted);
@@ -29,45 +31,41 @@ function Task() {
       .catch((err) => console.error(err));
   }, []);
 
-  // Toggle status
-  const toggleStatus = async (id) => {
-    const task = tasks.find((t) => t._id === id);
+  // Status update
+  const toggleStatus = async (_id) => {
+    const task = tasks.find((t) => t._id === _id);
     if (!task) return;
 
-    const newStatus =
-      task.status === "completed" ? "todo" : "completed";
+    const newStatus = task.status === "Completed" ? "Todo" : "Completed";
 
-    const res = await fetch(
-      `http://localhost:5000/tasks/${id}/status`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      }
-    );
+    const res = await fetch(`http://localhost:5000/tasks/${_id}/status`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus }),
+    });
 
-    const updatedTask = await res.json();
+    const updatedTask = await res.json(); // Responce
 
     const formatted = {
       _id: updatedTask._id,
       title: updatedTask.taskname,
-      priority: updatedTask.category,
-      dueDate: new Date(updatedTask.deadline).toLocaleDateString(),
+      description: updatedTask.description,
+      category: updatedTask.category,
       status: updatedTask.status,
+      deadline: new Date(updatedTask.deadline).toLocaleDateString(),
+      priority: updatedTask.priority,
     };
 
-    setTasks((prev) =>
-      prev.map((t) => (t._id === id ? formatted : t))
-    );
+    setTasks((prev) => prev.map((t) => (t._id === _id ? formatted : t)));
   };
 
   // Delete task
-  const deleteTask = async (id) => {
-    await fetch(`http://localhost:5000/tasks/${id}`, {
+  const deleteTask = async (_id) => {
+    await fetch(`http://localhost:5000/tasks/${_id}`, {
       method: "DELETE",
     });
 
-    setTasks((prev) => prev.filter((task) => task._id !== id));
+    setTasks((prev) => prev.filter((task) => task._id !== _id));
   };
 
   // Add task from form
@@ -76,10 +74,11 @@ function Task() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        taskname: newTask.title,
-        category: newTask.priority,
-        deadline: new Date(),
-        status: "todo",
+        taskname: newTask.taskname,
+        description: newTask.description,
+        category: newTask.category,
+        deadline: newTask.deadline,
+        priority: newTask.priority,
       }),
     });
 
@@ -88,8 +87,9 @@ function Task() {
     const formatted = {
       _id: savedTask._id,
       title: savedTask.taskname,
-      priority: savedTask.category,
-      dueDate: new Date(savedTask.deadline).toLocaleDateString(),
+      priority: savedTask.priority,
+      category: savedTask.category,
+      deadline: new Date(savedTask.deadline).toLocaleDateString(),
       status: savedTask.status,
     };
 
@@ -100,9 +100,7 @@ function Task() {
     <div className="bg-zinc-950 px-6 py-10 max-w-5xl mx-auto min-h-screen">
       <div className="pt-32">
         <TaskHeader count={tasks.length} />
-        {!showForm && (
-          <AddTaskButton onClick={() => setShowForm(true)} />
-        )}
+        {!showForm && <AddTaskButton onClick={() => setShowForm(true)} />}
       </div>
 
       {showForm && (

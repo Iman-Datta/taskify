@@ -1,8 +1,13 @@
-import { Trash2, Clock } from "lucide-react";
+import { Trash2, Clock, Pencil } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 
 function TaskItem({ task, onToggleStatus, onDelete }) {
-  const isCompleted = task.status === "completed";
+  const [isEditing, setIsEditing] = useState(false);
+  const isCompleted = task.status === "Completed";
+  const [editData, setEditData] = useState({
+    title: task.title,
+    description: task.description,
+  });
 
   return (
     <div
@@ -24,7 +29,7 @@ function TaskItem({ task, onToggleStatus, onDelete }) {
             className="
               mt-1
               data-[state=checked]:bg-emerald-600
-              data-[state=checked]:border-emerald-600
+              data-[state=checked]:border-emerald-600 rounded-lg
             "
           />
 
@@ -47,12 +52,22 @@ function TaskItem({ task, onToggleStatus, onDelete }) {
               {task.description}
             </p>
 
+            {/* Category Badge */}
+            <div className="flex items-center gap-2 mt-2">
+              <span className="w-2 h-2 rounded-full bg-sky-400"></span>
+              <span
+                className={`text-xs px-2 py-1 rounded-full font-medium  bg-sky-500/10 text-sky-400 border border-sky-500/20 `}
+              >
+                {task.category}
+              </span>
+            </div>
+
             <div className="flex items-center gap-2 text-sm mt-2">
               <Clock className="w-4 h-4 text-zinc-400" />
               <span
                 className={`${isCompleted ? "text-zinc-600" : "text-zinc-500"}`}
               >
-                {task.dueDate}
+                {task.deadline}
               </span>
             </div>
           </div>
@@ -81,15 +96,23 @@ function TaskItem({ task, onToggleStatus, onDelete }) {
           </span>
 
           {/* Delete Button */}
-          <button
-            onClick={() => onDelete(task._id)}
-            className="
+          <div className="flex gap-3 items-center">
+            <button
+              onClick={() => onEdit(task._id)}
+              className="text-zinc-500 hover:text-blue-400"
+            >
+              <Pencil size={18} />
+            </button>
+            <button
+              onClick={() => onDelete(task._id)}
+              className="
               text-zinc-500 hover:text-red-400
               transition
             "
-          >
-            <Trash2 size={18} />
-          </button>
+            >
+              <Trash2 size={18} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
