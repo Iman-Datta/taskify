@@ -29,23 +29,25 @@ function Task() {
   ]);
 
   return (
-    <>
-      <div className="bg-gray-100 px-6 py-10 max-w-5xl mx-auto">
-        <div className="pt-32">
-          <TaskHeader count={mockTasks.length} />
-          <AddTaskButton onClick={() => setShowForm(true)} />
-        </div>
-
-        {showForm && <AddTaskForm onCancel={() => setShowForm(false)} />}
-
-        <div className="flex justify-between items-center mb-8 gap-4">
-          <SearchBar />
-          <TaskFilters />
-        </div>
-
-        <TaskList tasks={mockTasks} />
+    <div className="bg-zinc-950 px-6 py-10 max-w-5xl mx-auto min-h-screen">
+      <div className="pt-32">
+        <TaskHeader count={mockTasks.length} />
+        <AddTaskButton onClick={() => setShowForm(true)} />
       </div>
-    </>
+
+      {showForm && (
+        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-lg shadow-black/30 transition-all duration-300">
+          <AddTaskForm onCancel={() => setShowForm(false)} />
+        </div>
+      )}
+
+      <div className="flex justify-between items-center mb-8 gap-4 mt-10">
+        <SearchBar />
+        <TaskFilters />
+      </div>
+
+      <TaskList tasks={mockTasks} />
+    </div>
   );
 }
 

@@ -5,11 +5,19 @@ import ForgotPassword from "../components/auth/ForgotPassword";
 import CompleteProfile from "../components/auth/CompleteProfile";
 
 function Auth() {
-  const [view, setView] = useState("login"); // login | register | forgot | complete-profile
+  const [view, setView] = useState("login");
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100">
-      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-zinc-950 px-4">
+      <div
+        className="
+        w-full max-w-md 
+        bg-zinc-900 border border-zinc-800
+        p-8 rounded-2xl 
+        shadow-2xl shadow-black/40
+        transition-all duration-300
+      "
+      >
         {view === "login" && (
           <Login
             onRegister={() => setView("register")}

@@ -5,71 +5,77 @@ function Home() {
 
   return (
     <div className="min-h-screen">
-
-      {/* Hero Section */}
       <section className="flex flex-col items-center justify-center text-center px-6 py-32">
-        <h1 className="text-5xl font-bold text-blue-700 mb-6">
+        <h1 className="text-5xl font-bold text-zinc-100 mb-6 tracking-tight">
           Your tasks, beautifully organized.
         </h1>
 
-        <p className="text-gray-600 mb-8 max-w-xl">
+        <p className="text-zinc-400 mb-8 max-w-xl">
           TaskFlow is a minimalist task manager built for people who value
           clarity. Prioritize, schedule, and accomplish — without the clutter.
         </p>
 
         <button
           onClick={() => navigate("/task")}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition"
+          className="
+            bg-zinc-800 hover:bg-zinc-700
+            text-white px-6 py-3
+            rounded-2xl font-semibold
+            shadow-md shadow-black/30
+            hover:shadow-xl hover:-translate-y-1
+            transition-all duration-300
+          "
         >
           Get Started
         </button>
       </section>
 
-      {/* Features Section */}
-      <section className="py-24 bg-gray-100">
+      <section className="py-24 bg-zinc-900 border-t border-zinc-800">
         <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-3 gap-10 text-center">
-          
-          <div className="p-6 bg-white rounded-xl shadow-md">
-            <h3 className="text-xl font-semibold mb-3">Smart Priorities</h3>
-            <p className="text-gray-600">
+          <div className="p-6 bg-zinc-800 rounded-2xl shadow-md shadow-black/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <h3 className="text-xl font-semibold mb-3 text-zinc-100">
+              Smart Priorities
+            </h3>
+            <p className="text-zinc-400">
               Highlight what matters most and stay focused on important tasks.
             </p>
           </div>
 
-          <div className="p-6 bg-white rounded-xl shadow-md">
-            <h3 className="text-xl font-semibold mb-3">Deadline Tracking</h3>
-            <p className="text-gray-600">
+          <div className="p-6 bg-zinc-800 rounded-2xl shadow-md shadow-black/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <h3 className="text-xl font-semibold mb-3 text-zinc-100">
+              Deadline Tracking
+            </h3>
+            <p className="text-zinc-400">
               Keep track of deadlines with intuitive reminders and timers.
             </p>
           </div>
 
-          <div className="p-6 bg-white rounded-xl shadow-md">
-            <h3 className="text-xl font-semibold mb-3">Secure & Private</h3>
-            <p className="text-gray-600">
+          <div className="p-6 bg-zinc-800 rounded-2xl shadow-md shadow-black/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <h3 className="text-xl font-semibold mb-3 text-zinc-100">
+              Secure & Private
+            </h3>
+            <p className="text-zinc-400">
               Your data is safe and accessible only to you.
             </p>
           </div>
-
         </div>
       </section>
 
-      {/* Extra Content for Scroll Testing */}
       <section className="py-32 px-6 max-w-4xl mx-auto text-center">
-        <h2 className="text-3xl font-bold mb-6">
+        <h2 className="text-3xl font-bold mb-6 text-zinc-100">
           Why Choose TaskFlow?
         </h2>
 
-        <p className="text-gray-600 mb-6">
+        <p className="text-zinc-400 mb-6">
           Built for simplicity. Designed for productivity. TaskFlow helps you
           stay organized without overwhelming you with unnecessary features.
         </p>
 
-        <p className="text-gray-600">
+        <p className="text-zinc-500">
           Scroll down to test your fixed navbar behavior and shadow effects.
           This extra section ensures your page has enough height to scroll.
         </p>
       </section>
-
     </div>
   );
 }
