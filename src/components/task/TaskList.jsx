@@ -1,6 +1,6 @@
 import TaskItem from "./TaskItem";
 
-function TaskList({ tasks, onToggleStatus, onDelete }) {
+function TaskList({ tasks, onToggleStatus, onDelete, onUpdate  }) {
   return (
     <div className="space-y-4">
       {tasks.map((task) => (
@@ -9,6 +9,7 @@ function TaskList({ tasks, onToggleStatus, onDelete }) {
           task={task}
           onToggleStatus={onToggleStatus}
           onDelete={onDelete}
+          onUpdate={onUpdate}
         />
       ))}
     </div>

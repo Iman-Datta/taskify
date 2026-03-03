@@ -1,14 +1,32 @@
 import { Trash2, Clock, Pencil } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 
-function TaskItem({ task, onToggleStatus, onDelete }) {
+import { useState } from "react";
+
+function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
   const isCompleted = task.status === "Completed";
-  const [editData, setEditData] = useState({
-    title: task.title,
+  const [editedData, setEditedData] = useState({
+    taskname: task.title,
     description: task.description,
+    category: task.category,
+    deadline: task.deadline,
+    priority: task.priority,
   });
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setEditedData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    onUpdate(task._id, editedData);
+    setIsEditing(false);
+  };
   return (
     <div
       className="
@@ -34,41 +52,82 @@ function TaskItem({ task, onToggleStatus, onDelete }) {
           />
 
           <div>
-            <h2
-              className={`text-lg font-semibold transition-all duration-300 ${
-                isCompleted
-                  ? "line-through text-zinc-500 opacity-60"
-                  : "text-zinc-100"
-              }`}
-            >
-              {task.title}
-            </h2>
-
-            <p
-              className={`mt-1 transition-all ${
-                isCompleted ? "text-zinc-600" : "text-zinc-400"
-              }`}
-            >
-              {task.description}
-            </p>
+            {isEditing ? (
+              <input
+                name="taskname"
+                value={editedData.taskname}
+                onChange={handleChange}
+                className="bg-zinc-800 text-zinc-100 p-1 rounded"
+              />
+            ) : (
+              <h2
+                className={`text-lg font-semibold transition-all duration-300 ${
+                  isCompleted
+                    ? "line-through text-zinc-500 opacity-60"
+                    : "text-zinc-100"
+                }`}
+              >
+                {task.title}
+              </h2>
+            )}
+            {isEditing ? (
+              <textarea
+                name="description"
+                value={editedData.description}
+                onChange={handleChange}
+                className="bg-zinc-800 text-zinc-100 p-1 rounded mt-1"
+              />
+            ) : (
+              <p
+                className={`mt-1 ${
+                  isCompleted ? "text-zinc-600" : "text-zinc-400"
+                }`}
+              >
+                {task.description}
+              </p>
+            )}
 
             {/* Category Badge */}
             <div className="flex items-center gap-2 mt-2">
-              <span className="w-2 h-2 rounded-full bg-sky-400"></span>
-              <span
-                className={`text-xs px-2 py-1 rounded-full font-medium  bg-sky-500/10 text-sky-400 border border-sky-500/20 `}
-              >
-                {task.category}
-              </span>
+              {isEditing ? (
+                <select
+                  name="category"
+                  value={editedData.category}
+                  onChange={handleChange}
+                  className="bg-zinc-800 text-zinc-100 text-xs px-2 py-1 rounded"
+                >
+                  <option value="Work">Work</option>
+                  <option value="Personal">Personal</option>
+                  <option value="Study">Study</option>
+                </select>
+              ) : (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-sky-400"></span>
+                  <span className="text-xs px-2 py-1 rounded-full font-medium bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                    {task.category}
+                  </span>
+                </>
+              )}
             </div>
 
             <div className="flex items-center gap-2 text-sm mt-2">
               <Clock className="w-4 h-4 text-zinc-400" />
-              <span
-                className={`${isCompleted ? "text-zinc-600" : "text-zinc-500"}`}
-              >
-                {task.deadline}
-              </span>
+
+              {isEditing ? (
+                <input
+                  type="date"
+                  name="deadline"
+                  value={editedData.deadline}
+                  onChange={handleChange}
+                  className="bg-zinc-800 text-zinc-100 p-1 rounded"
+                />
+              ) : (
+                <span
+                  className={`${isCompleted ? "text-zinc-600" : "text-zinc-500"}`}
+                >
+                  {task.deadline}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -95,23 +154,40 @@ function TaskItem({ task, onToggleStatus, onDelete }) {
             {task.priority}
           </span>
 
-          {/* Delete Button */}
+          {/* Delete + Edit Button */}
           <div className="flex gap-3 items-center">
-            <button
-              onClick={() => onEdit(task._id)}
-              className="text-zinc-500 hover:text-blue-400"
-            >
-              <Pencil size={18} />
-            </button>
-            <button
-              onClick={() => onDelete(task._id)}
-              className="
-              text-zinc-500 hover:text-red-400
-              transition
-            "
-            >
-              <Trash2 size={18} />
-            </button>
+            <div className="flex gap-3 items-center">
+              {isEditing ? (
+                <>
+                  <button onClick={handleSubmit} className="text-green-400">
+                    Save
+                  </button>
+
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="text-zinc-500"
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="text-zinc-500 hover:text-blue-400"
+                  >
+                    <Pencil size={18} />
+                  </button>
+
+                  <button
+                    onClick={() => onDelete(task._id)}
+                    className="text-zinc-500 hover:text-red-400"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

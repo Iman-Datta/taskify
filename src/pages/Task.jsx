@@ -96,6 +96,39 @@ function Task() {
     setTasks((prev) => [formatted, ...prev]);
   };
 
+  // Edit task
+  const editTask = async (_id, editedTask) => {
+    try {
+      const res = await fetch(`http://localhost:5000/tasks/${_id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editedTask),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update task");
+      }
+
+      const updatedTask = await res.json();
+
+      const formatted = {
+        _id: updatedTask._id,
+        title: updatedTask.taskname,
+        description: updatedTask.description,
+        category: updatedTask.category,
+        status: updatedTask.status,
+        deadline: new Date(updatedTask.deadline).toLocaleDateString(),
+        priority: updatedTask.priority,
+      };
+
+      setTasks((prev) =>
+        prev.map((task) => (task._id === _id ? formatted : task)),
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="bg-zinc-950 px-6 py-10 max-w-5xl mx-auto min-h-screen">
       <div className="pt-32">
@@ -121,6 +154,7 @@ function Task() {
         tasks={tasks}
         onToggleStatus={toggleStatus}
         onDelete={deleteTask}
+        onUpdate={editTask}
       />
     </div>
   );
