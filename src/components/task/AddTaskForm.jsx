@@ -7,28 +7,44 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
 import { Calendar as CalendarIcon } from "lucide-react";
 
-function AddTaskForm({  onAddTask, onCancel }) {
+function AddTaskForm({ onAddTask, onCancel }) {
   const [date, setDate] = useState(null);
+
   const [formData, setFormData] = useState({
     taskname: "",
     description: "",
     category: "",
-    deadline: "",
+    deadline: null,
     priority: "",
   });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handleSubmit = () => {
-    onAddTask(formData);
+    if (!formData.taskname.trim()) return;
+
+    onAddTask({
+      ...formData,
+      deadline: date ? format(date, "yyyy-MM-dd") : null,
+    });
+
+    // Reset form
+    setFormData({
+      taskname: "",
+      description: "",
+      category: "",
+      deadline: null,
+      priority: "",
+    });
+
+    setDate(null);
   };
 
   const inputStyle = `
@@ -70,7 +86,7 @@ function AddTaskForm({  onAddTask, onCancel }) {
           onChange={handleChange}
         />
 
-        {/* Priority + Date */}
+        {/* Priority + Category + Date */}
         <div className="flex flex-col md:flex-row gap-4">
           {/* Priority */}
           <select
@@ -79,17 +95,18 @@ function AddTaskForm({  onAddTask, onCancel }) {
             value={formData.priority}
             onChange={handleChange}
           >
-            <option>No priority</option>
+            <option value="">No priority</option>
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
           </select>
 
+          {/* Category */}
           <select
             name="category"
             value={formData.category}
             onChange={handleChange}
-            className={inputStyle}
+            className={`flex-1 ${inputStyle}`}
           >
             <option value="">Select category</option>
             <option value="Work">Work</option>
@@ -97,41 +114,44 @@ function AddTaskForm({  onAddTask, onCancel }) {
             <option value="Study">Study</option>
           </select>
 
-          {/* Date Picker */}
-          <Popover>
-            <label>Deadline</label>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="
-                  flex-1 justify-between items-center
-                  bg-zinc-900 border border-zinc-800
-                  text-zinc-200
-                  hover:bg-zinc-800
-                "
-              >
-                {date ? format(date, "dd-MM-yyyy") : "dd-mm-yyyy"}
-                <CalendarIcon className="ml-2 h-4 w-4 text-zinc-400" />
-              </Button>
-            </PopoverTrigger>
+          {/* Deadline */}
+          <div className="flex flex-col flex-1">
+            <label className="text-xs text-zinc-500 mb-1">Deadline</label>
 
-            <PopoverContent
-              className="w-auto p-0 bg-zinc-900 border border-zinc-800"
-              align="start"
-            >
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={(selectedDate) => {
-                  setDate(selectedDate);
-                  setFormData({ ...formData, deadline: selectedDate }); // It is not a input field therefore I have to take the data manually
-                }}
-                className="rounded-lg border"
-                captionLayout="dropdown"
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="
+                    justify-between
+                    bg-zinc-900 border border-zinc-800
+                    text-zinc-200
+                    hover:bg-zinc-800
+                  "
+                >
+                  {date ? format(date, "dd-MM-yyyy") : "dd-mm-yyyy"}
+
+                  <CalendarIcon className="ml-2 h-4 w-4 text-zinc-400" />
+                </Button>
+              </PopoverTrigger>
+
+              <PopoverContent
+                className="w-auto p-0 bg-zinc-900 border border-zinc-800"
+                align="start"
+              >
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={(selectedDate) => {
+                    setDate(selectedDate);
+                  }}
+                  className="rounded-lg border"
+                  captionLayout="dropdown"
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
 
         {/* Buttons */}
