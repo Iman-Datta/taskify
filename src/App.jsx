@@ -1,11 +1,42 @@
 import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setUser, clearUser } from "./features/auth/authSlice";
+
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import CheckEmail from "./pages/CheckEmail";
 import Task from "./pages/Task";
 
+const API = import.meta.env.VITE_API_URL;
+
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch(`${API}/auth/me`, {
+          credentials: "include",
+        });
+
+        if (!res.ok) {
+          dispatch(clearUser());
+          return;
+        }
+
+        const data = await res.json();
+
+        dispatch(setUser(data.user));
+      } catch {
+        dispatch(clearUser());
+      }
+    };
+
+    checkAuth();
+  }, [dispatch]);
+  
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 pt-2 transition-colors duration-300">
       <Navbar />

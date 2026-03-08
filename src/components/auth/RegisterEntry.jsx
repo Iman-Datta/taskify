@@ -1,9 +1,33 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 
-function RegisterEntry({ onLogin, onRegisterSuccess }) {
-  const [email, setEmail] = useState("");
-  const navigate = useNavigate();
+// import { Link, useNavigate } from "react-router-dom";
+
+function RegisterEntry({ onLogin, onRegister, onRegisterSuccess }) {
+  // const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+    await onRegister(formData.email, formData.password);
+    onRegisterSuccess("manual");
+  };
 
   return (
     <>
@@ -11,19 +35,13 @@ function RegisterEntry({ onLogin, onRegisterSuccess }) {
         Create Account
       </h2>
 
-      <form
-        className="space-y-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          onRegisterSuccess("manual");
-          navigate("/checkEmail", { state: { email } });
-        }}
-      >
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <input
+          name="email"
           type="email"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={formData.email}
+          onChange={handleChange}
           required
           className="
             w-full bg-zinc-900 border border-zinc-800
@@ -35,8 +53,11 @@ function RegisterEntry({ onLogin, onRegisterSuccess }) {
         />
 
         <input
+          name="password"
           type="password"
           placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
           className="
             w-full bg-zinc-900 border border-zinc-800
             px-4 py-2.5 rounded-xl
@@ -47,8 +68,11 @@ function RegisterEntry({ onLogin, onRegisterSuccess }) {
         />
 
         <input
+          name="confirmPassword"
           type="password"
           placeholder="Confirm Password"
+          value={formData.confirmPassword}
+          onChange={handleChange}
           className="
             w-full bg-zinc-900 border border-zinc-800
             px-4 py-2.5 rounded-xl

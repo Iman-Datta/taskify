@@ -1,6 +1,38 @@
+import { useDispatch, useSelector } from "react-redux";
+import { clearUser } from "../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
+const API = import.meta.env.VITE_API_URL;
+
 function Navbar() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // logout function
+  const logoutUser = async () => {
+    try {
+      const res = await fetch(`${API}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to logout");
+      }
+      dispatch(clearUser());
+      navigate("/");
+      console.log("Logged out successfully");
+      return data;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  };
+
+  const user = useSelector((state) => state.auth.user);
   return (
     <nav
       className="fixed top-0 left-0 w-full z-50 
@@ -41,9 +73,10 @@ function Navbar() {
         </Link>
 
         <div className="flex items-center gap-6">
-          <Link
-            to="/auth"
-            className="relative text-sm font-medium text-zinc-300
+          {user ? (
+            <button
+              onClick={logoutUser}
+              className="relative text-sm font-medium text-zinc-300
               after:absolute after:left-0 after:-bottom-1
               after:h-[2px] after:w-0
               after:bg-emerald-400
@@ -51,9 +84,24 @@ function Navbar() {
               hover:text-zinc-100
               hover:after:w-full
               transition-all duration-200"
-          >
-            Sign in
-          </Link>
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              to="/auth"
+              className="relative text-sm font-medium text-zinc-300
+              after:absolute after:left-0 after:-bottom-1
+              after:h-[2px] after:w-0
+              after:bg-emerald-400
+              after:transition-all after:duration-300
+              hover:text-zinc-100
+              hover:after:w-full
+              transition-all duration-200"
+            >
+              Sign in
+            </Link>
+          )}
 
           <Link
             to="/task"

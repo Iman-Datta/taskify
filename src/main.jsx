@@ -5,8 +5,13 @@ import App from "./App";
 import "@fontsource-variable/cormorant-garamond";
 import "./index.css";
 
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </BrowserRouter>,
 );

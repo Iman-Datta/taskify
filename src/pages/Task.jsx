@@ -7,13 +7,15 @@ import AddTaskForm from "../components/task/AddTaskForm";
 import TaskFilters from "../components/task/TaskFilters";
 import SearchBar from "../components/task/SearchBar";
 
+const API = import.meta.env.VITE_API_URL;
+
 function Task() {
   const [showForm, setShowForm] = useState(false); // Task form
   const [tasks, setTasks] = useState([]);
 
   // It loads only ONCE (When component load first time)
   useEffect(() => {
-    fetch("https://taskify-backend-5yjr.onrender.com/tasks")
+    fetch(`${API}/tasks`)
       .then((res) => res.json())
       .then((data) => {
         const formatted = data.map((task) => ({
@@ -38,7 +40,7 @@ function Task() {
 
     const newStatus = task.status === "Completed" ? "Todo" : "Completed";
 
-    const res = await fetch(`https://taskify-backend-5yjr.onrender.com/tasks/${_id}/status`, {
+    const res = await fetch(`${API}/tasks/${_id}/status`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: newStatus }),
@@ -61,7 +63,7 @@ function Task() {
 
   // Delete task
   const deleteTask = async (_id) => {
-    await fetch(`https://taskify-backend-5yjr.onrender.com/tasks/${_id}`, {
+    await fetch(`${API}/tasks/${_id}`, {
       method: "DELETE",
     });
 
@@ -70,7 +72,7 @@ function Task() {
 
   // Add task from form
   const addTask = async (newTask) => {
-    const res = await fetch("https://taskify-backend-5yjr.onrender.com/tasks", {
+    const res = await fetch(`${API}/tasks`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -99,7 +101,7 @@ function Task() {
   // Edit task
   const editTask = async (_id, editedTask) => {
     try {
-      const res = await fetch(`https://taskify-backend-5yjr.onrender.com/tasks/${_id}`, {
+      const res = await fetch(`${API}/tasks/${_id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(editedTask),
