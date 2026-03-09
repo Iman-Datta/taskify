@@ -14,10 +14,10 @@ const API = import.meta.env.VITE_API_URL;
 function Task() {
   const [showForm, setShowForm] = useState(false); // Task form
   const [tasks, setTasks] = useState([]);
-  const user = useSelector((state) => state.auth.user);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [priorityFilter, setPriorityFilter] = useState("All");
+  const { user, loading } = useSelector((state) => state.auth);
 
   // It loads only ONCE (When component load first time)
   useEffect(() => {
@@ -153,11 +153,6 @@ function Task() {
     }
   };
 
-  // If user is not login state go to auth page
-  if (!user) {
-    return <Navigate to="/auth" />;
-  }
-
   // Filtering
   const filteredTasks = tasks.filter((task) => {
     return (
@@ -165,6 +160,15 @@ function Task() {
       task.description?.toLowerCase().includes(search.toLowerCase())
     );
   });
+
+  // If user is not login state go to auth page
+  if (loading) {
+    return null;
+  }
+
+  if (!user) {
+    return <Navigate to="/auth" />;
+  }
 
   return (
     <div className="bg-zinc-950 px-6 py-10 max-w-5xl mx-auto min-h-screen">
