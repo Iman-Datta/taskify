@@ -18,18 +18,29 @@ function Auth() {
   const navigate = useNavigate();
 
   // Register function
-  const registerUser = async (email, password) => {
+  const registerUser = async (email, password, name) => {
     try {
       const res = await fetch(`${API}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        credentials: "include",
+        body: JSON.stringify({ email, password, name }),
       });
+
       if (!res.ok) {
         throw new Error("Failed to register user");
       }
-      const data = await res.json();
-      console.log(data);
+
+      // get logged-in user
+      const me = await fetch(`${API}/auth/me`, {
+        credentials: "include",
+      });
+
+      const userData = await me.json();
+
+      dispatch(setUser(userData.user));
+
+      navigate("/task");
     } catch (error) {
       console.error(error);
     }
@@ -83,10 +94,6 @@ function Auth() {
           <RegisterEntry
             onLogin={() => setView("login")}
             onRegister={registerUser}
-            onRegisterSuccess={(method) => {
-              console.log("Registered via:", method);
-              setView("complete-profile");
-            }}
           />
         )}
 

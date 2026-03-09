@@ -2,7 +2,7 @@ import { useState } from "react";
 
 // import { Link, useNavigate } from "react-router-dom";
 
-function RegisterEntry({ onLogin, onRegister, onRegisterSuccess }) {
+function RegisterEntry({ onLogin, onRegister }) {
   // const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -26,7 +26,6 @@ function RegisterEntry({ onLogin, onRegister, onRegisterSuccess }) {
       return;
     }
     await onRegister(formData.email, formData.password);
-    onRegisterSuccess("manual");
   };
 
   return (
@@ -112,7 +111,6 @@ function RegisterEntry({ onLogin, onRegister, onRegisterSuccess }) {
           hover:bg-zinc-800
           transition
         "
-        onClick={() => onRegisterSuccess("google")}
       >
         <svg width="20" height="20" viewBox="0 0 48 48">
           <path fill="#EA4335" d="..." />
