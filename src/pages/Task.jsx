@@ -16,10 +16,22 @@ function Task() {
   const [tasks, setTasks] = useState([]);
   const user = useSelector((state) => state.auth.user);
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [priorityFilter, setPriorityFilter] = useState("All");
 
   // It loads only ONCE (When component load first time)
   useEffect(() => {
-    fetch(`${API}/tasks`, {
+    let query = `${API}/tasks?`;
+
+    if (statusFilter !== "All") {
+      query += `status=${statusFilter}&`;
+    }
+
+    if (priorityFilter !== "All") {
+      query += `priority=${priorityFilter}&`;
+    }
+
+    fetch(query, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -37,7 +49,7 @@ function Task() {
         setTasks(formatted);
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [statusFilter, priorityFilter]);
 
   // Status update
   const toggleStatus = async (_id) => {
@@ -157,7 +169,7 @@ function Task() {
   return (
     <div className="bg-zinc-950 px-6 py-10 max-w-5xl mx-auto min-h-screen">
       <div className="pt-32">
-        <TaskHeader count={tasks.length} />
+        <TaskHeader count={filteredTasks.length} />
         {!showForm && <AddTaskButton onClick={() => setShowForm(true)} />}
       </div>
 
@@ -172,7 +184,12 @@ function Task() {
 
       <div className="flex justify-between items-center mb-8 gap-4 mt-10">
         <SearchBar setSearch={setSearch} />
-        <TaskFilters />
+        <TaskFilters
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          priorityFilter={priorityFilter}
+          setPriorityFilter={setPriorityFilter}
+        />
       </div>
 
       <TaskList

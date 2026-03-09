@@ -1,4 +1,9 @@
-function TaskFilters() {
+function TaskFilters({
+  statusFilter,
+  setStatusFilter,
+  priorityFilter,
+  setPriorityFilter,
+}) {
   const selectStyle = `
     px-3 py-2.5 rounded-xl
     bg-zinc-900 border border-zinc-800
@@ -9,17 +14,26 @@ function TaskFilters() {
 
   return (
     <div className="flex gap-3">
-      <select className={selectStyle}>
-        <option>All</option>
-        <option>Completed</option>
-        <option>Pending</option>
+      <select
+        className={selectStyle}
+        value={statusFilter}
+        onChange={(e) => setStatusFilter(e.target.value)}
+      >
+        <option value="All">All</option>
+        <option value="Todo">Todo</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
       </select>
 
-      <select className={selectStyle}>
-        <option>All Priorities</option>
-        <option>High</option>
-        <option>Medium</option>
-        <option>Low</option>
+      <select
+        className={selectStyle}
+        value={priorityFilter}
+        onChange={(e) => setPriorityFilter(e.target.value)}
+      >
+        <option value="All">All Priorities</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
       </select>
     </div>
   );
