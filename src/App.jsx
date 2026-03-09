@@ -12,23 +12,24 @@ import Task from "./pages/Task";
 const API = import.meta.env.VITE_API_URL;
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); // 
 
+  // Check user login or not
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const res = await fetch(`${API}/auth/me`, {
-          credentials: "include",
+          credentials: "include", // passing cookies
         });
 
         if (!res.ok) {
-          dispatch(clearUser());
+          dispatch(clearUser()); // making logout mode
           return;
         }
 
         const data = await res.json();
 
-        dispatch(setUser(data.user));
+        dispatch(setUser(data.user)); // Making login mode
       } catch {
         dispatch(clearUser());
       }
@@ -36,7 +37,7 @@ function App() {
 
     checkAuth();
   }, [dispatch]);
-  
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 pt-2 transition-colors duration-300">
       <Navbar />

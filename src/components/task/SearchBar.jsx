@@ -1,10 +1,15 @@
 import { Search } from "lucide-react";
 
-function SearchBar() {
+function SearchBar({ setSearch }) {
+  const handleChange = (e) => {
+    setSearch(e.target.value);
+  };
+
   return (
     <div className="relative w-full max-w-md">
       <input
         type="text"
+        onChange={handleChange}
         placeholder="Search tasks..."
         className="
           w-full px-4 py-2.5 pl-10

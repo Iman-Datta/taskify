@@ -1,13 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
-import { clearUser } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
+import { clearUser } from "../features/auth/authSlice";
 const API = import.meta.env.VITE_API_URL;
 
 function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
+  const user = useSelector((state) => state.auth.user);
 
   // logout function
   const logoutUser = async () => {
@@ -32,7 +34,6 @@ function Navbar() {
     }
   };
 
-  const user = useSelector((state) => state.auth.user);
   return (
     <nav
       className="fixed top-0 left-0 w-full z-50 

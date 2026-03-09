@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 import TaskList from "../components/task/TaskList";
 import TaskHeader from "../components/task/TaskHeader";
@@ -12,10 +14,14 @@ const API = import.meta.env.VITE_API_URL;
 function Task() {
   const [showForm, setShowForm] = useState(false); // Task form
   const [tasks, setTasks] = useState([]);
+  const user = useSelector((state) => state.auth.user);
+  const [search, setSearch] = useState("");
 
   // It loads only ONCE (When component load first time)
   useEffect(() => {
-    fetch(`${API}/tasks`)
+    fetch(`${API}/tasks`, {
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then((data) => {
         const formatted = data.map((task) => ({
@@ -44,6 +50,7 @@ function Task() {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: newStatus }),
+      credentials: "include",
     });
 
     const updatedTask = await res.json(); // Responce
@@ -65,6 +72,7 @@ function Task() {
   const deleteTask = async (_id) => {
     await fetch(`${API}/tasks/${_id}`, {
       method: "DELETE",
+      credentials: "include",
     });
 
     setTasks((prev) => prev.filter((task) => task._id !== _id));
@@ -82,6 +90,7 @@ function Task() {
         deadline: newTask.deadline,
         priority: newTask.priority,
       }),
+      credentials: "include",
     });
 
     const savedTask = await res.json();
@@ -105,6 +114,7 @@ function Task() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(editedTask),
+        credentials: "include",
       });
 
       if (!res.ok) {
@@ -131,6 +141,19 @@ function Task() {
     }
   };
 
+  // If user is not login state go to auth page
+  if (!user) {
+    return <Navigate to="/auth" />;
+  }
+
+  // Filtering
+  const filteredTasks = tasks.filter((task) => {
+    return (
+      task.title.toLowerCase().includes(search.toLowerCase()) ||
+      task.description?.toLowerCase().includes(search.toLowerCase())
+    );
+  });
+
   return (
     <div className="bg-zinc-950 px-6 py-10 max-w-5xl mx-auto min-h-screen">
       <div className="pt-32">
@@ -148,12 +171,12 @@ function Task() {
       )}
 
       <div className="flex justify-between items-center mb-8 gap-4 mt-10">
-        <SearchBar />
+        <SearchBar setSearch={setSearch} />
         <TaskFilters />
       </div>
 
       <TaskList
-        tasks={tasks}
+        tasks={filteredTasks}
         onToggleStatus={toggleStatus}
         onDelete={deleteTask}
         onUpdate={editTask}
