@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { Trash2, CheckCircle } from "lucide-react";
 
 import { clearUser } from "../features/auth/authSlice";
 const API = import.meta.env.VITE_API_URL;
@@ -8,7 +9,7 @@ const API = import.meta.env.VITE_API_URL;
 function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   const user = useSelector((state) => state.auth.user);
 
   // logout function
@@ -32,6 +33,11 @@ function Navbar() {
       console.error(err);
       throw err;
     }
+  };
+
+  // Coming soon
+  const comingSoon = () => {
+    alert("🚧 Coming Soon!");
   };
 
   return (
@@ -72,41 +78,29 @@ function Navbar() {
             </h2>
           </div>
         </Link>
-
-        <div className="flex items-center gap-6">
-          {user ? (
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-6">
             <button
-              onClick={logoutUser}
-              className="relative text-sm font-medium text-zinc-300
-              after:absolute after:left-0 after:-bottom-1
-              after:h-[2px] after:w-0
-              after:bg-emerald-400
-              after:transition-all after:duration-300
-              hover:text-zinc-100
-              hover:after:w-full
-              transition-all duration-200"
+              onClick={comingSoon}
+              title="Completed Tasks"
+              className="text-zinc-400 hover:text-emerald-400 transition"
             >
-              Logout
+              <CheckCircle size={20} />
             </button>
-          ) : (
-            <Link
-              to="/auth"
-              className="relative text-sm font-medium text-zinc-300
-              after:absolute after:left-0 after:-bottom-1
-              after:h-[2px] after:w-0
-              after:bg-emerald-400
-              after:transition-all after:duration-300
-              hover:text-zinc-100
-              hover:after:w-full
-              transition-all duration-200"
-            >
-              Sign in
-            </Link>
-          )}
 
-          <Link
-            to="/task"
-            className="
+            <button
+              onClick={comingSoon}
+              title="Trash"
+              className="text-zinc-400 hover:text-red-400 transition"
+            >
+              <Trash2 size={20} />
+            </button>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <Link
+              to="/task"
+              className="
               px-7 py-2.5 rounded-2xl font-semibold text-white
               bg-zinc-800 hover:bg-zinc-700
               shadow-md shadow-black/40
@@ -114,9 +108,39 @@ function Navbar() {
               active:translate-y-0 active:shadow-md
               transition-all duration-300 ease-out
             "
-          >
-            Get Started
-          </Link>
+            >
+              {user ? "My Tasks" : "Get Started"}
+            </Link>
+            {user ? (
+              <button
+                onClick={logoutUser}
+                className="relative text-sm font-medium text-zinc-300
+              after:absolute after:left-0 after:-bottom-1
+              after:h-[2px] after:w-0
+              after:bg-emerald-400
+              after:transition-all after:duration-300
+              hover:text-zinc-100
+              hover:after:w-full
+              transition-all duration-200"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                to="/auth"
+                className="relative text-sm font-medium text-zinc-300
+              after:absolute after:left-0 after:-bottom-1
+              after:h-[2px] after:w-0
+              after:bg-emerald-400
+              after:transition-all after:duration-300
+              hover:text-zinc-100
+              hover:after:w-full
+              transition-all duration-200"
+              >
+                Sign in
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </nav>

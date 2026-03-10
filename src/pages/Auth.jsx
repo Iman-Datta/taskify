@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import Login from "../components/auth/Login";
 import RegisterEntry from "../components/auth/RegisterEntry";
 import ForgotPassword from "../components/auth/ForgotPassword";
-import CompleteProfile from "../components/auth/CompleteProfile";
 
 import { setUser } from "../features/auth/authSlice";
 
@@ -100,8 +99,6 @@ function Auth() {
         {view === "forgot" && (
           <ForgotPassword onBackToLogin={() => setView("login")} />
         )}
-
-        {view === "complete-profile" && <CompleteProfile />}
       </div>
     </div>
   );
