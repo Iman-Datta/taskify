@@ -8,11 +8,13 @@ import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import CheckEmail from "./pages/CheckEmail";
 import Task from "./pages/Task";
+import Completed from "./pages/Completed";
+import Trash from "./pages/Trash";
 
 const API = import.meta.env.VITE_API_URL;
 
 function App() {
-  const dispatch = useDispatch(); // 
+  const dispatch = useDispatch(); //
 
   // Check user login or not
   useEffect(() => {
@@ -46,6 +48,8 @@ function App() {
         <Route path="/auth" element={<Auth />} />
         <Route path="/checkEmail" element={<CheckEmail />} />
         <Route path="/task" element={<Task />} />
+        <Route path="/completed" element={<Completed />} />
+        <Route path="/trash" element={<Trash />} />
       </Routes>
     </div>
   );

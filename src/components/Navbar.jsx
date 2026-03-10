@@ -35,11 +35,6 @@ function Navbar() {
     }
   };
 
-  // Coming soon
-  const comingSoon = () => {
-    alert("🚧 Coming Soon!");
-  };
-
   return (
     <nav
       className="fixed top-0 left-0 w-full z-50 
@@ -80,21 +75,21 @@ function Navbar() {
         </Link>
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-6">
-            <button
-              onClick={comingSoon}
+            <Link
+              to="/completed"
               title="Completed Tasks"
               className="text-zinc-400 hover:text-emerald-400 transition"
             >
               <CheckCircle size={20} />
-            </button>
+            </Link>
 
-            <button
-              onClick={comingSoon}
+            <Link
+              to="/trash"
               title="Trash"
               className="text-zinc-400 hover:text-red-400 transition"
             >
               <Trash2 size={20} />
-            </button>
+            </Link>
           </div>
 
           <div className="flex items-center gap-6">

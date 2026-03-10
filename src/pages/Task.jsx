@@ -15,23 +15,13 @@ function Task() {
   const [showForm, setShowForm] = useState(false); // Task form
   const [tasks, setTasks] = useState([]);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("All");
+
   const [priorityFilter, setPriorityFilter] = useState("All");
   const { user, loading } = useSelector((state) => state.auth);
 
-  // It loads only ONCE (When component load first time)
+  // Fetch all todo data
   useEffect(() => {
-    let query = `${API}/tasks?`;
-
-    if (statusFilter !== "All") {
-      query += `status=${statusFilter}&`;
-    }
-
-    if (priorityFilter !== "All") {
-      query += `priority=${priorityFilter}&`;
-    }
-
-    fetch(query, {
+    fetch(`${API}/tasks?status=Todo&isDeleted=false`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -49,7 +39,7 @@ function Task() {
         setTasks(formatted);
       })
       .catch((err) => console.error(err));
-  }, [statusFilter, priorityFilter]);
+  }, [priorityFilter]);
 
   // Status update
   const toggleStatus = async (_id) => {
@@ -189,8 +179,6 @@ function Task() {
       <div className="flex justify-between items-center mb-8 gap-4 mt-10">
         <SearchBar setSearch={setSearch} />
         <TaskFilters
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
           priorityFilter={priorityFilter}
           setPriorityFilter={setPriorityFilter}
         />
