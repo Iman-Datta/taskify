@@ -45,7 +45,7 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
   const handleSubmit = () => {
     onUpdate(task._id, {
       ...editedData,
-      // ✅ Send as pure date string
+      // Send as pure date string
       deadline: editedData.deadline
         ? format(editedData.deadline, "yyyy-MM-dd")
         : null,
@@ -75,7 +75,7 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
   };
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-md shadow-black/30 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
+    <div className="bg-white border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 rounded-2xl p-5 shadow-md shadow-black/10 dark:shadow-black/30 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
       <div className="flex justify-between items-start">
         <div className="flex items-start gap-3">
           <Checkbox
@@ -91,14 +91,14 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
                 name="taskname"
                 value={editedData.taskname}
                 onChange={handleChange}
-                className="bg-transparent text-lg font-semibold text-zinc-100 border-b border-zinc-700 focus:border-emerald-500 focus:outline-none transition w-full"
+                className="bg-transparent text-lg font-semibold text-zinc-900 dark:text-zinc-100 border-b border-zinc-300 dark:border-zinc-700 focus:border-emerald-500 focus:outline-none transition w-full"
               />
             ) : (
               <h2
                 className={`text-lg font-semibold ${
                   isCompleted
                     ? "line-through text-zinc-500 opacity-60"
-                    : "text-zinc-100"
+                    : "text-zinc-900 dark:text-zinc-100"
                 }`}
               >
                 {task.title}
@@ -113,12 +113,14 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
                 value={editedData.description}
                 onChange={handleTextareaChange}
                 rows={1}
-                className="bg-transparent text-zinc-400 border-b border-zinc-700 focus:border-emerald-500 focus:outline-none transition resize-none w-full mt-3"
+                className="bg-transparent text-zinc-600 dark:text-zinc-400 border-b border-zinc-300 dark:border-zinc-700 focus:border-emerald-500 focus:outline-none transition resize-none w-full mt-3"
               />
             ) : (
               <p
                 className={`mt-1 ${
-                  isCompleted ? "text-zinc-600" : "text-zinc-400"
+                  isCompleted
+                    ? "text-zinc-600"
+                    : "text-zinc-600 dark:text-zinc-400"
                 }`}
               >
                 {task.description}
@@ -132,7 +134,7 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
                   name="category"
                   value={editedData.category}
                   onChange={handleChange}
-                  className="bg-zinc-900 border border-zinc-800 text-zinc-100 text-xs px-3 py-1.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="bg-white border border-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-100 text-xs px-3 py-1.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500"
                 >
                   <option value="Work">Work</option>
                   <option value="Personal">Personal</option>
@@ -155,7 +157,7 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
-                      className="justify-between bg-zinc-900 border border-zinc-800 text-zinc-200 hover:bg-zinc-800"
+                      className="justify-between bg-white border border-zinc-300 text-zinc-700 hover:bg-zinc-100 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-800"
                     >
                       {editedData.deadline
                         ? format(editedData.deadline, "dd-MM-yyyy")
@@ -166,7 +168,7 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
 
                   <PopoverContent
                     align="start"
-                    className="w-auto p-0 bg-zinc-900 border border-zinc-800"
+                    className="w-auto p-0 bg-white border border-zinc-300 dark:bg-zinc-900 dark:border-zinc-800"
                   >
                     <Calendar
                       mode="single"
@@ -185,9 +187,12 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
               ) : (
                 <div className="flex items-center gap-2 text-sm">
                   <Clock className="w-4 h-4 text-zinc-400" />
-                  {/* format manually */}
                   <span
-                    className={isCompleted ? "text-zinc-600" : "text-zinc-500"}
+                    className={
+                      isCompleted
+                        ? "text-zinc-600"
+                        : "text-zinc-600 dark:text-zinc-500"
+                    }
                   >
                     {task.deadline
                       ? format(new Date(task.deadline), "dd-MM-yyyy")
@@ -204,18 +209,15 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
           {/* Priority */}
           {isEditing ? (
             <div className="flex flex-col items-end gap-2">
-              <label className="text-xs text-zinc-500">Priority</label>
+              <label className="text-xs text-zinc-600 dark:text-zinc-500">
+                Priority
+              </label>
 
               <select
                 name="priority"
                 value={editedData.priority}
                 onChange={handleChange}
-                className="
-          bg-zinc-900 border border-zinc-800
-          text-zinc-100 text-xs
-          px-3 py-1.5 rounded-lg
-          focus:outline-none focus:ring-1 focus:ring-emerald-500
-        "
+                className="bg-white border border-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-100 text-xs px-3 py-1.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500"
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -248,14 +250,14 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
             <div className="flex gap-3 text-sm font-medium">
               <button
                 onClick={handleSubmit}
-                className="text-emerald-400 hover:text-emerald-300 transition"
+                className="text-emerald-500 hover:text-emerald-400 transition"
               >
                 Save
               </button>
 
               <button
                 onClick={() => setIsEditing(false)}
-                className="text-zinc-500 hover:text-zinc-300 transition"
+                className="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition"
               >
                 Cancel
               </button>

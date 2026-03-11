@@ -161,14 +161,14 @@ function Task() {
   }
 
   return (
-    <div className="bg-zinc-950 px-6 py-10 max-w-5xl mx-auto min-h-screen">
+    <div className="bg-zinc-100 dark:bg-zinc-950 px-6 py-10 max-w-5xl mx-auto min-h-screen transition-colors duration-300">
       <div className="pt-32">
         <TaskHeader count={filteredTasks.length} />
         {!showForm && <AddTaskButton onClick={() => setShowForm(true)} />}
       </div>
 
       {showForm && (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-lg shadow-black/30 transition-all duration-300">
+        <div className="bg-white border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 rounded-2xl p-6 shadow-lg shadow-black/10 dark:shadow-black/30 transition-all duration-300">
           <AddTaskForm
             onCancel={() => setShowForm(false)}
             onAddTask={addTask}

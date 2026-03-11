@@ -41,7 +41,7 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 pt-2 transition-colors duration-300">
+    <div className="min-h-screen bg-zinc-100 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 pt-2 transition-colors duration-300">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

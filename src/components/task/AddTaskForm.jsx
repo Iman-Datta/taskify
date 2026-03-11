@@ -48,23 +48,29 @@ function AddTaskForm({ onAddTask, onCancel }) {
   };
 
   const inputStyle = `
-    bg-zinc-900 border border-zinc-800
-    rounded-xl px-4 py-2.5
-    text-zinc-100 placeholder:text-zinc-500
-    focus:outline-none focus:ring-2 focus:ring-emerald-500
-    transition
-  `;
+  bg-white border border-zinc-300
+  dark:bg-zinc-900 dark:border-zinc-800
+  rounded-xl px-4 py-2.5
+  text-zinc-900 placeholder:text-zinc-500
+  dark:text-zinc-100 dark:placeholder:text-zinc-500
+  focus:outline-none focus:ring-2 focus:ring-emerald-500
+  transition
+`;
 
   return (
     <div
       className="
-        bg-zinc-900 border border-zinc-800
-        p-6 rounded-2xl
-        shadow-xl shadow-black/40
-        mb-10
-      "
+      bg-white border border-zinc-200
+      dark:bg-zinc-900 dark:border-zinc-800
+      p-6 rounded-2xl
+      shadow-xl shadow-black/10 dark:shadow-black/40
+      mb-10
+      transition-colors duration-300
+    "
     >
-      <h2 className="text-xl font-semibold mb-4 text-zinc-100">Add New Task</h2>
+      <h2 className="text-xl font-semibold mb-4 text-zinc-900 dark:text-zinc-100">
+        Add New Task
+      </h2>
 
       <div className="flex flex-col gap-4">
         {/* Title */}
@@ -116,18 +122,21 @@ function AddTaskForm({ onAddTask, onCancel }) {
 
           {/* Deadline */}
           <div className="flex flex-col flex-1">
-            <label className="text-xs text-zinc-500 mb-1">Deadline</label>
+            <label className="text-xs text-zinc-600 dark:text-zinc-500 mb-1">
+              Deadline
+            </label>
 
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   className="
-                    justify-between
-                    bg-zinc-900 border border-zinc-800
-                    text-zinc-200
-                    hover:bg-zinc-800
-                  "
+                  justify-between
+                  bg-white border border-zinc-300
+                  text-zinc-700 hover:bg-zinc-100
+                  dark:bg-zinc-900 dark:border-zinc-800
+                  dark:text-zinc-200 dark:hover:bg-zinc-800
+                "
                 >
                   {date ? format(date, "dd-MM-yyyy") : "dd-mm-yyyy"}
 
@@ -136,15 +145,17 @@ function AddTaskForm({ onAddTask, onCancel }) {
               </PopoverTrigger>
 
               <PopoverContent
-                className="w-auto p-0 bg-zinc-900 border border-zinc-800"
+                className="
+                w-auto p-0
+                bg-white border border-zinc-300
+                dark:bg-zinc-900 dark:border-zinc-800
+              "
                 align="start"
               >
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={(selectedDate) => {
-                    setDate(selectedDate);
-                  }}
+                  onSelect={(selectedDate) => setDate(selectedDate)}
                   className="rounded-lg border"
                   captionLayout="dropdown"
                   initialFocus
@@ -159,11 +170,13 @@ function AddTaskForm({ onAddTask, onCancel }) {
           <button
             onClick={onCancel}
             className="
-              px-4 py-2 rounded-xl
-              bg-zinc-800 hover:bg-zinc-700
-              text-zinc-300
-              transition
-            "
+            px-4 py-2 rounded-xl
+            bg-zinc-200 hover:bg-zinc-300
+            text-zinc-800
+            dark:bg-zinc-800 dark:hover:bg-zinc-700
+            dark:text-zinc-300
+            transition
+          "
           >
             Cancel
           </button>
@@ -171,11 +184,12 @@ function AddTaskForm({ onAddTask, onCancel }) {
           <button
             onClick={handleSubmit}
             className="
-              px-4 py-2 rounded-xl
-              bg-emerald-600 hover:bg-emerald-500
-              text-white
-              transition
-            "
+            px-4 py-2 rounded-xl
+            bg-emerald-600 hover:bg-emerald-500
+            text-white
+            shadow-sm shadow-black/10
+            transition
+          "
           >
             Add Task
           </button>
