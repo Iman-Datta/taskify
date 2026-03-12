@@ -29,13 +29,31 @@ function Trash() {
       .catch((err) => console.error(err));
   }, []);
 
+  async function restoreTask(id) {
+    try {
+      const res = await fetch(`${API}/tasks/${id}/restore`, {
+        method: "PATCH",
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to restore task");
+      }
+
+      // remove task from trash list instantly
+      setTrashTasks((prev) => prev.filter((task) => task._id !== id));
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
     <div className="bg-zinc-100 dark:bg-zinc-950 px-6 py-10 max-w-5xl mx-auto min-h-screen transition-colors duration-300">
       <div className="pt-32">
-        <TaskHeader count={trashTasks.length} />
+        <TaskHeader count={trashTasks.length} title="Recycle Bin" />
       </div>
 
-      <TaskList tasks={trashTasks} />
+      <TaskList tasks={trashTasks} onRestore={restoreTask} variant="trash" />
     </div>
   );
 }

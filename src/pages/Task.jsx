@@ -67,7 +67,15 @@ function Task() {
       priority: updatedTask.priority,
     };
 
-    setTasks((prev) => prev.map((t) => (t._id === _id ? formatted : t)));
+    if (formatted.status === "Completed") {
+      setTasks((prev) => prev.map((t) => (t._id === _id ? formatted : t)));
+
+      setTimeout(() => {
+        setTasks((prev) => prev.filter((t) => t._id !== _id));
+      }, 500);
+    } else {
+      setTasks((prev) => prev.map((t) => (t._id === _id ? formatted : t)));
+    }
   };
 
   // Delete task
@@ -107,6 +115,9 @@ function Task() {
     };
 
     setTasks((prev) => [formatted, ...prev]);
+
+    // close form
+    setShowForm(false);
   };
 
   // Edit task
@@ -163,7 +174,7 @@ function Task() {
   return (
     <div className="bg-zinc-100 dark:bg-zinc-950 px-6 py-10 max-w-5xl mx-auto min-h-screen transition-colors duration-300">
       <div className="pt-32">
-        <TaskHeader count={filteredTasks.length} />
+        <TaskHeader count={filteredTasks.length} title="My Tasks" />
         {!showForm && <AddTaskButton onClick={() => setShowForm(true)} />}
       </div>
 

@@ -11,11 +11,13 @@ import { Calendar as CalendarIcon } from "lucide-react";
 
 function AddTaskForm({ onAddTask, onCancel }) {
   const [date, setDate] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     taskname: "",
     description: "",
     category: "",
+    categoryInput: "",
     deadline: null,
     priority: "",
   });
@@ -30,16 +32,22 @@ function AddTaskForm({ onAddTask, onCancel }) {
   const handleSubmit = () => {
     if (!formData.taskname.trim()) return;
 
+    const finalCategory =
+      formData.category === "Custom"
+        ? formData.categoryInput?.trim() || "Other"
+        : formData.category;
+
     onAddTask({
       ...formData,
+      category: finalCategory,
       deadline: date ? format(date, "yyyy-MM-dd") : null,
     });
 
-    // Reset form
     setFormData({
       taskname: "",
       description: "",
       category: "",
+      categoryInput: "",
       deadline: null,
       priority: "",
     });
@@ -56,6 +64,18 @@ function AddTaskForm({ onAddTask, onCancel }) {
   focus:outline-none focus:ring-2 focus:ring-emerald-500
   transition
 `;
+  const categoryOptions = [
+    "Work",
+    "Personal",
+    "Study",
+    "Health",
+    "Finance",
+    "Shopping",
+    "Home",
+    "Fitness",
+    "Learning",
+    "Custom",
+  ];
 
   return (
     <div
@@ -108,17 +128,35 @@ function AddTaskForm({ onAddTask, onCancel }) {
           </select>
 
           {/* Category */}
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            className={`flex-1 ${inputStyle}`}
-          >
-            <option value="">Select category</option>
-            <option value="Work">Work</option>
-            <option value="Personal">Personal</option>
-            <option value="Study">Study</option>
-          </select>
+          {formData.category === "Custom" ? (
+            <input
+              type="text"
+              placeholder="Enter category..."
+              value={formData.categoryInput}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  categoryInput: e.target.value,
+                }))
+              }
+              className={`flex-1 ${inputStyle}`}
+            />
+          ) : (
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className={`flex-1 ${inputStyle}`}
+            >
+              <option value="">Select category</option>
+
+              {categoryOptions.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat === "Custom" ? "Other / Custom" : cat}
+                </option>
+              ))}
+            </select>
+          )}
 
           {/* Deadline */}
           <div className="flex flex-col flex-1">
@@ -126,7 +164,7 @@ function AddTaskForm({ onAddTask, onCancel }) {
               Deadline
             </label>
 
-            <Popover>
+            <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
@@ -155,7 +193,10 @@ function AddTaskForm({ onAddTask, onCancel }) {
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={(selectedDate) => setDate(selectedDate)}
+                  onSelect={(selectedDate) => {
+                    setDate(selectedDate);
+                    setOpen(false);
+                  }}
                   className="rounded-lg border"
                   captionLayout="dropdown"
                   initialFocus

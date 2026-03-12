@@ -20,7 +20,7 @@ function Completed() {
           description: task.description,
           category: task.category,
           status: task.status,
-          deadline: new Date(task.deadline).toLocaleDateString(),
+          deadline: task.deadline,
           priority: task.priority,
         }));
 
@@ -29,13 +29,37 @@ function Completed() {
       .catch((err) => console.error(err));
   }, []);
 
+  const restoreTask = async (id) => {
+    try {
+      const res = await fetch(`${API}/tasks/${id}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ status: "Todo" }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to restore task");
+      }
+
+      // remove task instantly from completed list
+      setCompletedTasks((prev) => prev.filter((task) => task._id !== id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="bg-zinc-100 dark:bg-zinc-950 px-6 py-10 max-w-5xl mx-auto min-h-screen transition-colors duration-300">
       <div className="pt-32">
-        <TaskHeader count={completedTasks.length} />
+        <TaskHeader count={completedTasks.length} title="Completed Tasks" />
       </div>
 
-      <TaskList tasks={completedTasks} />
+      <TaskList
+        tasks={completedTasks}
+        variant="completed"
+        onRestore={restoreTask}
+      />
     </div>
   );
 }

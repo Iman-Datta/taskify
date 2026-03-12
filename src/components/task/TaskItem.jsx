@@ -1,4 +1,10 @@
-import { Trash2, Clock, Pencil, Calendar as CalendarIcon } from "lucide-react";
+import {
+  Trash2,
+  Clock,
+  Pencil,
+  Calendar as CalendarIcon,
+  RotateCcw,
+} from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -11,7 +17,14 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { useRef } from "react";
 
-function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
+function TaskItem({
+  task,
+  variant = "normal",
+  onToggleStatus,
+  onDelete,
+  onUpdate,
+  onRestore,
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const isCompleted = task.status === "Completed";
 
@@ -35,21 +48,36 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
     setEditedData({
       taskname: task.title,
       description: task.description,
-      category: task.category,
+      category: categoryOptions.includes(task.category)
+        ? task.category
+        : "Custom",
+      categoryInput: categoryOptions.includes(task.category)
+        ? ""
+        : task.category,
       deadline: task.deadline ? new Date(task.deadline) : null,
       priority: task.priority,
     });
+
     setIsEditing(true);
   };
 
   const handleSubmit = () => {
-    onUpdate(task._id, {
-      ...editedData,
-      // Send as pure date string
+    const finalCategory =
+      editedData.category === "Custom"
+        ? editedData.categoryInput?.trim() || "Other"
+        : editedData.category;
+
+    const payload = {
+      taskname: editedData.taskname,
+      description: editedData.description,
+      category: finalCategory,
+      priority: editedData.priority,
       deadline: editedData.deadline
         ? format(editedData.deadline, "yyyy-MM-dd")
         : null,
-    });
+    };
+
+    onUpdate(task._id, payload);
 
     setIsEditing(false);
   };
@@ -74,15 +102,40 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
     }
   };
 
+  const categoryOptions = [
+    "Work",
+    "Personal",
+    "Study",
+    "Health",
+    "Finance",
+    "Shopping",
+    "Home",
+    "Fitness",
+    "Learning",
+    "Custom",
+  ];
+  const categoryColors = {
+    Work: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    Personal: "bg-green-500/10 text-green-400 border-green-500/20",
+    Study: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+    Health: "bg-red-500/10 text-red-400 border-red-500/20",
+  };
+
   return (
-    <div className="bg-white border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 rounded-2xl p-5 shadow-md shadow-black/10 dark:shadow-black/30 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
+    <div
+      className={`bg-white border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 rounded-2xl p-5 shadow-md shadow-black/10 dark:shadow-black/30 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 ${
+        variant === "normal" && isCompleted ? "opacity-50 scale-[0.98]" : ""
+      }`}
+    >
       <div className="flex justify-between items-start">
         <div className="flex items-start gap-3">
-          <Checkbox
-            checked={isCompleted}
-            onCheckedChange={() => onToggleStatus(task._id)}
-            className="mt-1 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 rounded-lg"
-          />
+          {variant === "normal" && (
+            <Checkbox
+              checked={isCompleted}
+              onCheckedChange={() => onToggleStatus(task._id)}
+              className="mt-1 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 rounded-lg"
+            />
+          )}
 
           <div className="w-full">
             {/* Title */}
@@ -96,7 +149,7 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
             ) : (
               <h2
                 className={`text-lg font-semibold ${
-                  isCompleted
+                  variant === "normal" && isCompleted
                     ? "line-through text-zinc-500 opacity-60"
                     : "text-zinc-900 dark:text-zinc-100"
                 }`}
@@ -130,20 +183,45 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
             {/* Category */}
             <div className="mt-3">
               {isEditing ? (
-                <select
-                  name="category"
-                  value={editedData.category}
-                  onChange={handleChange}
-                  className="bg-white border border-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-100 text-xs px-3 py-1.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                >
-                  <option value="Work">Work</option>
-                  <option value="Personal">Personal</option>
-                  <option value="Study">Study</option>
-                </select>
+                editedData.category === "Custom" ? (
+                  <input
+                    type="text"
+                    name="category"
+                    placeholder="Enter category..."
+                    value={editedData.categoryInput || ""}
+                    onChange={(e) =>
+                      setEditedData((prev) => ({
+                        ...prev,
+                        categoryInput: e.target.value,
+                      }))
+                    }
+                    className="bg-white border border-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-100 text-xs px-3 py-1.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  />
+                ) : (
+                  <select
+                    name="category"
+                    value={editedData.category}
+                    onChange={(e) =>
+                      setEditedData((prev) => ({
+                        ...prev,
+                        category: e.target.value,
+                      }))
+                    }
+                    className="bg-white border border-zinc-300 text-zinc-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-100 text-xs px-3 py-1.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  >
+                    {categoryOptions.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat === "Custom" ? "Other / Custom" : cat}
+                      </option>
+                    ))}
+                  </select>
+                )
               ) : (
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-sky-400"></span>
-                  <span className="text-xs px-2 py-1 rounded-full font-medium bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full border ${categoryColors[task.category] || "bg-sky-500/10 text-sky-400 border-sky-500/20"}`}
+                  >
                     {task.category}
                   </span>
                 </div>
@@ -185,22 +263,22 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
                   </PopoverContent>
                 </Popover>
               ) : (
-                <div className="flex items-center gap-2 text-sm">
-                  <Clock className="w-4 h-4 text-zinc-400" />
-                  <span
-                    className={
-                      isCompleted
-                        ? "text-zinc-600"
-                        : "text-zinc-600 dark:text-zinc-500"
-                    }
-                  >
-                    {task.deadline
-                      ? !isNaN(new Date(task.deadline))
-                        ? format(new Date(task.deadline), "dd-MM-yyyy")
-                        : ""
-                      : ""}
-                  </span>
-                </div>
+                variant === "normal" && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Clock className="w-4 h-4 text-zinc-400" />
+                    <span
+                      className={
+                        isCompleted
+                          ? "text-zinc-600"
+                          : "text-zinc-600 dark:text-zinc-500"
+                      }
+                    >
+                      {task.deadline &&
+                        !isNaN(new Date(task.deadline)) &&
+                        format(new Date(task.deadline), "dd-MM-yyyy")}
+                    </span>
+                  </div>
+                )
               )}
             </div>
           </div>
@@ -264,7 +342,8 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
                 Cancel
               </button>
             </div>
-          ) : (
+          ) : variant === "normal" ? (
+            /* TODO PAGE */
             <div className="flex gap-3">
               <button
                 onClick={handleEditClick}
@@ -280,7 +359,38 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
                 <Trash2 size={18} />
               </button>
             </div>
-          )}
+          ) : variant === "completed" ? (
+            /* COMPLETED PAGE */
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onRestore?.(task._id)}
+                className="flex items-center gap-2 hover:bg-emerald-50 hover:text-emerald-500 transition"
+              >
+                <RotateCcw size={16} />
+                Restore
+              </Button>
+
+              <button
+                onClick={() => onDelete(task._id)}
+                className="text-zinc-500 hover:text-red-400"
+              >
+                <Trash2 size={18} />
+              </button>
+            </div>
+          ) : variant === "trash" ? (
+            /* TRASH PAGE */
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onRestore?.(task._id)}
+              className="flex items-center gap-2 hover:bg-emerald-50 hover:text-emerald-500 transition"
+            >
+              <RotateCcw size={16} />
+              Restore
+            </Button>
+          ) : null}
         </div>
       </div>
     </div>
