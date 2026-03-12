@@ -184,12 +184,7 @@ function AddTaskForm({ onAddTask, onCancel }) {
           <button
             onClick={handleSubmit}
             className="
-            px-4 py-2 rounded-xl
-            bg-emerald-600 hover:bg-emerald-500
-            text-white
-            shadow-sm shadow-black/10
-            transition
-          "
+            px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm shadow-black/10 transition"
           >
             Add Task
           </button>
