@@ -108,6 +108,7 @@ function Task() {
     const formatted = {
       _id: savedTask._id,
       title: savedTask.taskname,
+      description: savedTask.description,
       priority: savedTask.priority,
       category: savedTask.category,
       deadline: savedTask.deadline,
