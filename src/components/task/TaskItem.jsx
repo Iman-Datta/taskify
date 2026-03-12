@@ -195,9 +195,7 @@ function TaskItem({ task, onToggleStatus, onDelete, onUpdate }) {
                     }
                   >
                     {task.deadline
-                      ? !isNaN(new Date(task.deadline))
-                        ? format(new Date(task.deadline), "dd-MM-yyyy")
-                        : ""
+                      ? format(new Date(task.deadline), "dd-MM-yyyy")
                       : ""}
                   </span>
                 </div>

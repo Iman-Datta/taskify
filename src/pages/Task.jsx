@@ -32,7 +32,7 @@ function Task() {
           description: task.description,
           category: task.category,
           status: task.status,
-          deadline: task.deadline,
+          deadline: new Date(task.deadline).toLocaleDateString(),
           priority: task.priority,
         }));
 
@@ -102,7 +102,7 @@ function Task() {
       title: savedTask.taskname,
       priority: savedTask.priority,
       category: savedTask.category,
-      deadline: savedTask.deadline,
+      deadline: new Date(savedTask.deadline).toLocaleDateString(),
       status: savedTask.status,
     };
 
@@ -131,7 +131,7 @@ function Task() {
         description: updatedTask.description,
         category: updatedTask.category,
         status: updatedTask.status,
-        deadline: updatedTask.deadline,
+        deadline: new Date(updatedTask.deadline).toLocaleDateString(),
         priority: updatedTask.priority,
       };
 
