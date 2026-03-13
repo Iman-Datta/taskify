@@ -16,7 +16,6 @@ function Auth() {
 
   const navigate = useNavigate();
 
-  // Register function
   const registerUser = async (email, password, name) => {
     try {
       const res = await fetch(`${API}/auth/register`, {
@@ -30,7 +29,6 @@ function Auth() {
         throw new Error("Failed to register user");
       }
 
-      // get logged-in user
       const me = await fetch(`${API}/auth/me`, {
         credentials: "include",
       });
@@ -58,7 +56,6 @@ function Auth() {
         throw new Error("Failed to login");
       }
 
-      // Now fetch the authenticated user
       const me = await fetch(`${API}/auth/me`, {
         credentials: "include",
       });
@@ -76,8 +73,24 @@ function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-950 px-4">
-      <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 p-8 rounded-2xl shadow-2xl shadow-black/40 transition-all duration-300">
+    <div
+      className="
+      min-h-screen flex items-center justify-center px-4
+      bg-zinc-100 dark:bg-zinc-950
+      transition-colors duration-300
+    "
+    >
+      <div
+        className="
+        w-full max-w-md
+        bg-white border border-zinc-200
+        dark:bg-zinc-900 dark:border-zinc-800
+        p-8 rounded-2xl
+        shadow-xl shadow-black/10
+        dark:shadow-black/40
+        transition-colors duration-300
+      "
+      >
         {view === "login" && (
           <Login
             onRegister={() => setView("register")}

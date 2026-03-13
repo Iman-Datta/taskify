@@ -5,30 +5,32 @@ function ForgotPassword({ onBackToLogin }) {
   const [otpVerified, setOtpVerified] = useState(false);
 
   const inputStyle = `
-    bg-zinc-900 border border-zinc-800
+    bg-white border border-zinc-300
+    dark:bg-zinc-900 dark:border-zinc-800
     px-4 py-2.5 rounded-xl
-    text-zinc-100 placeholder:text-zinc-500
+    text-zinc-900 placeholder:text-zinc-500
+    dark:text-zinc-100 dark:placeholder:text-zinc-500
     focus:outline-none focus:ring-2 focus:ring-emerald-500
     transition
   `;
 
   const buttonStyle = `
-    bg-zinc-800 hover:bg-zinc-700
-    text-white rounded-xl
-    shadow-md shadow-black/30
-    hover:shadow-lg hover:-translate-y-0.5
-    active:translate-y-0 active:shadow-md
-    transition-all duration-300
+    bg-zinc-200 hover:bg-zinc-300
+    dark:bg-zinc-800 dark:hover:bg-zinc-700
+    text-zinc-900 dark:text-white
+    rounded-xl
+    shadow-sm shadow-black/10
+    dark:shadow-black/30
+    transition
   `;
 
   return (
     <>
-      <h2 className="text-2xl font-semibold text-center mb-6 text-zinc-100">
+      <h2 className="text-2xl font-semibold text-center mb-6 text-zinc-900 dark:text-zinc-100">
         Forgot Password
       </h2>
 
       <form className="space-y-4">
-
         {!otpSent && (
           <div className="flex gap-2">
             <input
@@ -48,10 +50,7 @@ function ForgotPassword({ onBackToLogin }) {
 
         {otpSent && !otpVerified && (
           <div className="flex gap-2">
-            <input
-              placeholder="Enter OTP"
-              className={`flex-1 ${inputStyle}`}
-            />
+            <input placeholder="Enter OTP" className={`flex-1 ${inputStyle}`} />
             <button
               type="button"
               onClick={() => setOtpVerified(true)}
@@ -79,7 +78,8 @@ function ForgotPassword({ onBackToLogin }) {
             <button
               type="button"
               className="
-                w-full bg-emerald-600 hover:bg-emerald-500
+                w-full
+                bg-emerald-600 hover:bg-emerald-500
                 text-white py-2.5 rounded-xl
                 transition
               "
@@ -94,7 +94,7 @@ function ForgotPassword({ onBackToLogin }) {
         Remembered your password?{" "}
         <button
           onClick={onBackToLogin}
-          className="text-emerald-400 hover:text-emerald-300 transition"
+          className="text-emerald-500 hover:text-emerald-400 transition"
         >
           Login
         </button>

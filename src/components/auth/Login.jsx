@@ -6,6 +6,17 @@ function Login({ onLogin, onRegister, onForgot, onLoginSuccess }) {
     password: "",
   });
 
+  const inputStyle = `
+    w-full
+    bg-white border border-zinc-300
+    dark:bg-zinc-900 dark:border-zinc-800
+    px-4 py-2.5 rounded-xl
+    text-zinc-900 placeholder:text-zinc-500
+    dark:text-zinc-100 dark:placeholder:text-zinc-500
+    focus:outline-none focus:ring-2 focus:ring-emerald-500
+    transition
+  `;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -24,9 +35,10 @@ function Login({ onLogin, onRegister, onForgot, onLoginSuccess }) {
       alert("Login failed");
     }
   };
+
   return (
     <>
-      <h2 className="text-2xl font-semibold text-center mb-6 text-zinc-100">
+      <h2 className="text-2xl font-semibold text-center mb-6 text-zinc-900 dark:text-zinc-100">
         Login
       </h2>
 
@@ -38,13 +50,7 @@ function Login({ onLogin, onRegister, onForgot, onLoginSuccess }) {
           onChange={handleChange}
           placeholder="Email"
           required
-          className="
-            w-full bg-zinc-900 border border-zinc-800
-            px-4 py-2.5 rounded-xl
-            text-zinc-100 placeholder:text-zinc-500
-            focus:outline-none focus:ring-2 focus:ring-emerald-500
-            transition
-          "
+          className={inputStyle}
         />
 
         <input
@@ -54,24 +60,20 @@ function Login({ onLogin, onRegister, onForgot, onLoginSuccess }) {
           onChange={handleChange}
           placeholder="Password"
           required
-          className="
-            w-full bg-zinc-900 border border-zinc-800
-            px-4 py-2.5 rounded-xl
-            text-zinc-100 placeholder:text-zinc-500
-            focus:outline-none focus:ring-2 focus:ring-emerald-500
-            transition
-          "
+          className={inputStyle}
         />
 
         <button
           type="submit"
           className="
-            w-full bg-zinc-800 hover:bg-zinc-700
-            text-white py-2.5 rounded-xl font-medium
-            shadow-md shadow-black/30
-            hover:shadow-xl hover:-translate-y-0.5
-            active:translate-y-0 active:shadow-md
-            transition-all duration-300
+            w-full
+            bg-zinc-200 hover:bg-zinc-300
+            dark:bg-zinc-800 dark:hover:bg-zinc-700
+            text-zinc-900 dark:text-white
+            py-2.5 rounded-xl font-medium
+            shadow-sm shadow-black/10
+            dark:shadow-black/30
+            transition
           "
         >
           Login
@@ -79,22 +81,27 @@ function Login({ onLogin, onRegister, onForgot, onLoginSuccess }) {
       </form>
 
       <div className="flex items-center my-6">
-        <div className="flex-1 h-px bg-zinc-800"></div>
+        <div className="flex-1 h-px bg-zinc-300 dark:bg-zinc-800"></div>
         <span className="px-3 text-sm text-zinc-500">OR</span>
-        <div className="flex-1 h-px bg-zinc-800"></div>
+        <div className="flex-1 h-px bg-zinc-300 dark:bg-zinc-800"></div>
       </div>
 
       <button
         type="button"
         className="
-          w-full bg-zinc-900 border border-zinc-800
+          w-full
+          bg-white border border-zinc-300
+          dark:bg-zinc-900 dark:border-zinc-800
           py-2.5 rounded-xl
           flex items-center justify-center gap-3
-          hover:bg-zinc-800
+          hover:bg-zinc-100
+          dark:hover:bg-zinc-800
           transition
         "
       >
-        <span className="font-medium text-zinc-300">Continue with Google</span>
+        <span className="font-medium text-zinc-700 dark:text-zinc-300">
+          Continue with Google
+        </span>
       </button>
 
       <div className="mt-6 text-sm text-zinc-500 text-center space-y-2">
@@ -102,7 +109,7 @@ function Login({ onLogin, onRegister, onForgot, onLoginSuccess }) {
           Don’t have an account?{" "}
           <button
             onClick={onRegister}
-            className="text-emerald-400 hover:text-emerald-300 transition"
+            className="text-emerald-500 hover:text-emerald-400 transition"
           >
             Create account
           </button>
@@ -110,7 +117,7 @@ function Login({ onLogin, onRegister, onForgot, onLoginSuccess }) {
 
         <button
           onClick={onForgot}
-          className="text-emerald-400 hover:text-emerald-300 transition"
+          className="text-emerald-500 hover:text-emerald-400 transition"
         >
           Forgot password?
         </button>
