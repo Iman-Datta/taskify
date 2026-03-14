@@ -40,7 +40,7 @@ function RegisterEntry({ onLogin, onRegister }) {
   };
 
   const handleGoogleLogin = () => {
-    const url = `${API}/auth/google`;
+    const url = "https://taskflow-backend-a8ps.onrender.com/auth/google";
 
     console.log("Google login redirect URL:", url);
 
