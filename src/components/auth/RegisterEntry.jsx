@@ -2,7 +2,6 @@ import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 
 const API = import.meta.env.VITE_API_URL;
-console.log("API URL:", API);
 
 function RegisterEntry({ onLogin, onRegister }) {
   const [formData, setFormData] = useState({
@@ -40,7 +39,7 @@ function RegisterEntry({ onLogin, onRegister }) {
   };
 
   const handleGoogleLogin = () => {
-    const url = "https://taskflow-backend-a8ps.onrender.com/auth/google";
+    const url = `${API}/auth/google`;
 
     console.log("Google login redirect URL:", url);
 

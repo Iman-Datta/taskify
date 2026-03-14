@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 
+const API = import.meta.env.VITE_API_URL;
+
 function Login({ onLogin, onRegister, onForgot, onLoginSuccess }) {
   const [formData, setFormData] = useState({
     email: "",
@@ -38,7 +40,9 @@ function Login({ onLogin, onRegister, onForgot, onLoginSuccess }) {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:5000/auth/google";
+    const url = `${API}/auth/google`;
+
+    console.log("Google login redirect URL:", url);
   };
 
   return (
