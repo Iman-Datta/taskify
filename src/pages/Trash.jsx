@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 import TaskList from "../components/task/TaskList";
 import TaskHeader from "../components/task/TaskHeader";
@@ -42,6 +43,7 @@ function Trash() {
 
       // remove task from trash list instantly
       setTrashTasks((prev) => prev.filter((task) => task._id !== id));
+      toast.success("Task restored to active tasks.");
     } catch (err) {
       console.error(err);
     }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 import TaskList from "../components/task/TaskList";
 import TaskHeader from "../components/task/TaskHeader";
@@ -77,6 +78,7 @@ function Task() {
     } else {
       setTasks((prev) => prev.map((t) => (t._id === _id ? formatted : t)));
     }
+    toast.success("Task completed and moved to completed tasks.");
   };
 
   // Delete task
@@ -92,6 +94,7 @@ function Task() {
 
     setTasks((prev) => prev.filter((t) => t._id !== deleteCandidate));
     setDeleteCandidate(null);
+    toast.success("Task moved to recycle bin. It will be deleted in 24 hours.");
   };
   const cancelDelete = () => {
     setDeleteCandidate(null);
@@ -128,6 +131,7 @@ function Task() {
 
     // close form
     setShowForm(false);
+    toast.success("New task added.");
   };
 
   // Edit task
@@ -159,8 +163,10 @@ function Task() {
       setTasks((prev) =>
         prev.map((task) => (task._id === _id ? formatted : task)),
       );
+      toast.success("Task updated.");
     } catch (error) {
       console.error(error);
+      toast.error("Update failed. Please try again.");
     }
   };
 
