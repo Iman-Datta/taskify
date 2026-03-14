@@ -39,7 +39,7 @@ function RegisterEntry({ onLogin, onRegister }) {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${API}/google`;
+    window.location.href = `${API}/auth/google`;
   };
 
   return (
