@@ -4,6 +4,8 @@ import {
   Pencil,
   Calendar as CalendarIcon,
   RotateCcw,
+  Check,
+  X,
 } from "lucide-react";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -131,21 +133,27 @@ function TaskItem({
 
   return (
     <div className="space-y-2">
-      {/* ── Card ── */}
       <div
         className={`
           relative bg-white dark:bg-zinc-900
-          border border-zinc-200 dark:border-zinc-800
-          rounded-2xl p-5
-          shadow-sm hover:shadow-lg
-          hover:-translate-y-0.5
+          border rounded-2xl p-5
+          shadow-sm hover:shadow-lg hover:-translate-y-0.5
           transition-all duration-300
+          ${
+            isEditing
+              ? "border-emerald-300/70 dark:border-emerald-700/40 ring-1 ring-emerald-400/10 dark:ring-emerald-500/10"
+              : "border-zinc-200 dark:border-zinc-800"
+          }
           ${variant === "normal" && isCompleted ? "opacity-50 scale-[0.98]" : ""}
         `}
       >
-        {/* ── Main row ── */}
+        {/* Emerald top strip shown only in edit mode */}
+        {isEditing && (
+          <div className="absolute top-0 left-0 right-0 h-[2.5px] rounded-t-2xl bg-gradient-to-r from-emerald-400 via-emerald-300/60 to-transparent" />
+        )}
+
         <div className="flex justify-between items-start gap-4">
-          {/* ── LEFT: checkbox + content ── */}
+          {/* ── LEFT ── */}
           <div className="flex items-start gap-3 flex-1 min-w-0">
             {variant === "normal" && (
               <Checkbox
@@ -164,11 +172,14 @@ function TaskItem({
                   onChange={handleChange}
                   className="
                     w-full bg-transparent
-                    text-lg font-semibold
+                    text-lg font-semibold leading-snug
                     text-zinc-900 dark:text-zinc-100
-                    border-b border-zinc-300 dark:border-zinc-700
-                    focus:border-emerald-500 focus:outline-none
-                    transition pb-0.5
+                    border-b-2 border-dashed
+                    border-zinc-200 dark:border-zinc-700
+                    hover:border-zinc-300 dark:hover:border-zinc-600
+                    focus:border-solid focus:border-emerald-400 dark:focus:border-emerald-500
+                    focus:outline-none
+                    transition-all duration-200 pb-0.5
                   "
                 />
               ) : (
@@ -193,22 +204,17 @@ function TaskItem({
                   rows={1}
                   placeholder="Add a description..."
                   className="
-      w-full mt-3 resize-none
-      text-sm leading-relaxed
-      text-zinc-700 dark:text-zinc-300
-      placeholder:text-zinc-300 dark:placeholder:text-zinc-600
-
-      bg-zinc-50/80 dark:bg-zinc-800/50
-      border border-zinc-200 dark:border-zinc-700/60
-      hover:border-zinc-300 dark:hover:border-zinc-600
-      focus:border-emerald-400 dark:focus:border-emerald-500/70
-      focus:bg-white dark:focus:bg-zinc-800
-      focus:ring-2 focus:ring-emerald-500/10 dark:focus:ring-emerald-500/10
-
-      rounded-lg px-3 py-2
-      focus:outline-none
-      transition-all duration-200
-    "
+                    w-full mt-2 resize-none bg-transparent
+                    text-sm leading-relaxed
+                    text-zinc-600 dark:text-zinc-400
+                    placeholder:text-zinc-300 dark:placeholder:text-zinc-600
+                    border-b-2 border-dashed
+                    border-zinc-200 dark:border-zinc-700
+                    hover:border-zinc-300 dark:hover:border-zinc-600
+                    focus:border-solid focus:border-emerald-400 dark:focus:border-emerald-500
+                    focus:outline-none
+                    transition-all duration-200 pb-0.5
+                  "
                 />
               ) : (
                 <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
@@ -219,115 +225,127 @@ function TaskItem({
               {/* Category */}
               <div className="mt-3">
                 {isEditing ? (
-                  editedData.category === "Custom" ? (
-                    <input
-                      type="text"
-                      name="category"
-                      placeholder="Enter category…"
-                      value={editedData.categoryInput || ""}
-                      onChange={(e) =>
-                        setEditedData((prev) => ({
-                          ...prev,
-                          categoryInput: e.target.value,
-                        }))
-                      }
-                      className="
-                        bg-white dark:bg-zinc-900
-                        border border-zinc-300 dark:border-zinc-700
-                        text-zinc-900 dark:text-zinc-100
-                        text-xs px-3 py-1.5 rounded-lg
-                        focus:outline-none focus:ring-1 focus:ring-emerald-500
-                        transition
-                      "
-                    />
-                  ) : (
-                    <select
-                      name="category"
-                      value={editedData.category}
-                      onChange={(e) =>
-                        setEditedData((prev) => ({
-                          ...prev,
-                          category: e.target.value,
-                        }))
-                      }
-                      className="
-                        bg-white dark:bg-zinc-900
-                        border border-zinc-300 dark:border-zinc-700
-                        text-zinc-900 dark:text-zinc-100
-                        text-xs px-3 py-1.5 rounded-lg
-                        focus:outline-none focus:ring-1 focus:ring-emerald-500
-                        transition
-                      "
-                    >
-                      {categoryOptions.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat === "Custom" ? "Other / Custom" : cat}
-                        </option>
-                      ))}
-                    </select>
-                  )
-                ) : (
-                  <div className="flex items-center gap-2 mt-3">
-                    <span
-                      className={`
-      inline-flex items-center gap-1.5
-      text-[11px] font-semibold tracking-wider uppercase
-      px-2.5 py-1 rounded-md border
-      ${categoryColors[task.category] || "bg-sky-500/10 text-sky-400 border-sky-500/20 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20"}
-    `}
-                    >
-                      <svg
-                        width="6"
-                        height="6"
-                        viewBox="0 0 6 6"
-                        className="shrink-0 opacity-60"
-                      >
-                        <circle cx="3" cy="3" r="3" fill="currentColor" />
-                      </svg>
-                      {task.category}
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] uppercase tracking-widest font-semibold text-zinc-400 dark:text-zinc-500 shrink-0">
+                      Category
                     </span>
+                    {editedData.category === "Custom" ? (
+                      <input
+                        type="text"
+                        name="categoryInput"
+                        placeholder="Enter category…"
+                        value={editedData.categoryInput || ""}
+                        onChange={(e) =>
+                          setEditedData((prev) => ({
+                            ...prev,
+                            categoryInput: e.target.value,
+                          }))
+                        }
+                        className="
+                          text-xs px-2.5 py-1 rounded-md
+                          bg-zinc-50 dark:bg-zinc-800/60
+                          border border-dashed border-zinc-300 dark:border-zinc-600
+                          text-zinc-700 dark:text-zinc-300
+                          focus:outline-none focus:border-solid focus:border-emerald-400 dark:focus:border-emerald-500
+                          transition-all duration-200
+                        "
+                      />
+                    ) : (
+                      <select
+                        name="category"
+                        value={editedData.category}
+                        onChange={(e) =>
+                          setEditedData((prev) => ({
+                            ...prev,
+                            category: e.target.value,
+                          }))
+                        }
+                        className="
+                          text-xs px-2.5 py-1 rounded-md
+                          bg-zinc-50 dark:bg-zinc-800/60
+                          border border-dashed border-zinc-300 dark:border-zinc-600
+                          text-zinc-700 dark:text-zinc-300
+                          focus:outline-none focus:border-solid focus:border-emerald-400 dark:focus:border-emerald-500
+                          transition-all duration-200 cursor-pointer
+                        "
+                      >
+                        {categoryOptions.map((cat) => (
+                          <option key={cat} value={cat}>
+                            {cat === "Custom" ? "Other / Custom" : cat}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                   </div>
+                ) : (
+                  <span
+                    className={`
+                      inline-flex items-center gap-1.5
+                      text-[11px] font-semibold tracking-wider uppercase
+                      px-2.5 py-1 rounded-md border
+                      ${categoryColors[task.category] || "bg-sky-500/10 text-sky-400 border-sky-500/20 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20"}
+                    `}
+                  >
+                    <svg
+                      width="6"
+                      height="6"
+                      viewBox="0 0 6 6"
+                      className="shrink-0 opacity-60"
+                    >
+                      <circle cx="3" cy="3" r="3" fill="currentColor" />
+                    </svg>
+                    {task.category}
+                  </span>
                 )}
               </div>
 
               {/* Deadline */}
               <div className="mt-3">
                 {isEditing ? (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="
-                          justify-between
-                          bg-white dark:bg-zinc-900
-                          border border-zinc-300 dark:border-zinc-700
-                          text-zinc-700 dark:text-zinc-200
-                          hover:bg-zinc-50 dark:hover:bg-zinc-800
-                          text-xs h-8 px-3 rounded-lg
-                          transition
-                        "
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] uppercase tracking-widest font-semibold text-zinc-400 dark:text-zinc-500 shrink-0">
+                      Deadline
+                    </span>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <button
+                          className="
+                            inline-flex items-center gap-1.5
+                            text-xs px-2.5 py-1 rounded-md
+                            bg-zinc-50 dark:bg-zinc-800/60
+                            border border-dashed border-zinc-300 dark:border-zinc-600
+                            text-zinc-600 dark:text-zinc-400
+                            hover:border-zinc-400 dark:hover:border-zinc-500
+                            hover:text-zinc-800 dark:hover:text-zinc-200
+                            focus:outline-none
+                            transition-all duration-200
+                          "
+                        >
+                          <CalendarIcon className="h-3 w-3 text-zinc-400" />
+                          {editedData.deadline
+                            ? format(editedData.deadline, "dd MMM yyyy")
+                            : "Pick a date"}
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        align="start"
+                        className="w-auto p-0 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl"
                       >
-                        {editedData.deadline
-                          ? format(editedData.deadline, "dd-MM-yyyy")
-                          : "dd-mm-yyyy"}
-                        <CalendarIcon className="ml-2 h-3.5 w-3.5 text-zinc-400" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      align="start"
-                      className="w-auto p-0 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl"
-                    >
-                      <Calendar
-                        mode="single"
-                        selected={editedData.deadline}
-                        onSelect={(date) =>
-                          setEditedData((prev) => ({ ...prev, deadline: date }))
-                        }
-                        captionLayout="dropdown"
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+                        <Calendar
+                          mode="single"
+                          selected={editedData.deadline}
+                          onSelect={(date) =>
+                            setEditedData((prev) => ({
+                              ...prev,
+                              deadline: date,
+                            }))
+                          }
+                          captionLayout="dropdown"
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 ) : (
                   variant === "normal" && (
                     <div className="flex items-center gap-1.5 text-xs text-zinc-400 dark:text-zinc-500">
@@ -344,25 +362,25 @@ function TaskItem({
             </div>
           </div>
 
-          {/* ── RIGHT: priority + action buttons ── */}
+          {/* ── RIGHT ── */}
           <div className="flex flex-col items-end gap-4 shrink-0">
             {/* Priority */}
             {isEditing ? (
               <div className="flex flex-col items-end gap-1.5">
-                <label className="text-xs text-zinc-400 dark:text-zinc-500 font-medium tracking-wide uppercase">
+                <span className="text-[10px] uppercase tracking-widest font-semibold text-zinc-400 dark:text-zinc-500">
                   Priority
-                </label>
+                </span>
                 <select
                   name="priority"
                   value={editedData.priority}
                   onChange={handleChange}
                   className="
-                    bg-white dark:bg-zinc-900
-                    border border-zinc-300 dark:border-zinc-700
-                    text-zinc-900 dark:text-zinc-100
-                    text-xs px-3 py-1.5 rounded-lg
-                    focus:outline-none focus:ring-1 focus:ring-emerald-500
-                    transition
+                    text-xs px-2.5 py-1 rounded-md
+                    bg-zinc-50 dark:bg-zinc-800/60
+                    border border-dashed border-zinc-300 dark:border-zinc-600
+                    text-zinc-700 dark:text-zinc-300
+                    focus:outline-none focus:border-solid focus:border-emerald-400 dark:focus:border-emerald-500
+                    transition-all duration-200 cursor-pointer
                   "
                 >
                   <option value="low">Low</option>
@@ -373,67 +391,72 @@ function TaskItem({
             ) : (
               <span
                 className={`
-    inline-flex items-center gap-1.5
-    text-[11px] font-semibold tracking-wider uppercase
-    px-3 py-1 rounded-lg
-    border-l-[3px] border border-transparent
-
-    ${
-      task.priority === "high"
-        ? "border-l-red-500 bg-red-50/80 text-red-600 border-red-100 dark:bg-zinc-800/80 dark:text-red-400 dark:border-zinc-700/40 dark:border-l-red-500"
-        : ""
-    }
-    ${
-      task.priority === "medium"
-        ? "border-l-amber-500 bg-amber-50/80 text-amber-600 border-amber-100 dark:bg-zinc-800/80 dark:text-amber-400 dark:border-zinc-700/40 dark:border-l-amber-500"
-        : ""
-    }
-    ${
-      task.priority === "low"
-        ? "border-l-emerald-500 bg-emerald-50/80 text-emerald-600 border-emerald-100 dark:bg-zinc-800/80 dark:text-emerald-400 dark:border-zinc-700/40 dark:border-l-emerald-500"
-        : ""
-    }
-  `}
+                  inline-flex items-center gap-1.5
+                  text-[11px] font-semibold tracking-wider uppercase
+                  px-3 py-1 rounded-lg
+                  border-l-[3px] border border-transparent
+                  ${
+                    task.priority === "high"
+                      ? "border-l-red-500 bg-red-50/80 text-red-600 border-red-100 dark:bg-zinc-800/80 dark:text-red-400 dark:border-zinc-700/40 dark:border-l-red-500"
+                      : ""
+                  }
+                  ${
+                    task.priority === "medium"
+                      ? "border-l-amber-500 bg-amber-50/80 text-amber-600 border-amber-100 dark:bg-zinc-800/80 dark:text-amber-400 dark:border-zinc-700/40 dark:border-l-amber-500"
+                      : ""
+                  }
+                  ${
+                    task.priority === "low"
+                      ? "border-l-emerald-500 bg-emerald-50/80 text-emerald-600 border-emerald-100 dark:bg-zinc-800/80 dark:text-emerald-400 dark:border-zinc-700/40 dark:border-l-emerald-500"
+                      : ""
+                  }
+                `}
               >
                 {task.priority}
               </span>
             )}
 
-            {/* Action buttons */}
+            {/* Action Buttons */}
             {isEditing ? (
-              <div className="flex gap-3 text-sm font-semibold">
+              <div className="flex gap-2">
                 <button
                   onClick={handleSubmit}
-                  className="text-emerald-500 hover:text-emerald-400 transition-colors"
+                  className="
+                    flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold
+                    bg-emerald-500 hover:bg-emerald-400
+                    text-white shadow-sm shadow-emerald-500/20
+                    active:scale-[0.97] transition-all duration-150
+                  "
                 >
+                  <Check size={12} strokeWidth={2.5} />
                   Save
                 </button>
                 <button
                   onClick={() => setIsEditing(false)}
-                  className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
+                  className="
+                    flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
+                    border border-zinc-200 dark:border-zinc-700
+                    text-zinc-500 dark:text-zinc-400
+                    hover:bg-zinc-100 dark:hover:bg-zinc-800
+                    hover:text-zinc-700 dark:hover:text-zinc-200
+                    active:scale-[0.97] transition-all duration-150
+                  "
                 >
+                  <X size={12} strokeWidth={2.5} />
                   Cancel
                 </button>
               </div>
             ) : variant === "normal" ? (
-              <div className="flex gap-2.5">
+              <div className="flex gap-2">
                 <button
                   onClick={handleEditClick}
-                  className="
-                    p-1.5 rounded-lg text-zinc-400
-                    hover:text-blue-400 hover:bg-blue-500/10
-                    transition-all duration-200
-                  "
+                  className="p-1.5 rounded-lg text-zinc-400 hover:text-blue-400 hover:bg-blue-500/10 transition-all duration-200"
                 >
                   <Pencil size={15} />
                 </button>
                 <button
                   onClick={() => onDelete(task._id)}
-                  className="
-                    p-1.5 rounded-lg text-zinc-400
-                    hover:text-red-400 hover:bg-red-500/10
-                    transition-all duration-200
-                  "
+                  className="p-1.5 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200"
                 >
                   <Trash2 size={15} />
                 </button>
@@ -444,24 +467,14 @@ function TaskItem({
                   variant="outline"
                   size="sm"
                   onClick={() => onRestore?.(task._id)}
-                  className="
-                    flex items-center gap-1.5 h-8 px-3 text-xs rounded-lg
-                    border-zinc-200 dark:border-zinc-700
-                    hover:bg-emerald-50 hover:text-emerald-500 hover:border-emerald-300
-                    dark:hover:bg-emerald-950 dark:hover:border-emerald-800
-                    transition-all duration-200
-                  "
+                  className="flex items-center gap-1.5 h-8 px-3 text-xs rounded-lg border-zinc-200 dark:border-zinc-700 hover:bg-emerald-50 hover:text-emerald-500 hover:border-emerald-300 dark:hover:bg-emerald-950 dark:hover:border-emerald-800 transition-all duration-200"
                 >
                   <RotateCcw size={13} />
                   Restore
                 </Button>
                 <button
                   onClick={() => onDelete(task._id)}
-                  className="
-                    p-1.5 rounded-lg text-zinc-400
-                    hover:text-red-400 hover:bg-red-500/10
-                    transition-all duration-200
-                  "
+                  className="p-1.5 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200"
                 >
                   <Trash2 size={15} />
                 </button>
@@ -471,13 +484,7 @@ function TaskItem({
                 variant="outline"
                 size="sm"
                 onClick={() => onRestore?.(task._id)}
-                className="
-                  flex items-center gap-1.5 h-8 px-3 text-xs rounded-lg
-                  border-zinc-200 dark:border-zinc-700
-                  hover:bg-emerald-50 hover:text-emerald-500 hover:border-emerald-300
-                  dark:hover:bg-emerald-950 dark:hover:border-emerald-800
-                  transition-all duration-200
-                "
+                className="flex items-center gap-1.5 h-8 px-3 text-xs rounded-lg border-zinc-200 dark:border-zinc-700 hover:bg-emerald-50 hover:text-emerald-500 hover:border-emerald-300 dark:hover:bg-emerald-950 dark:hover:border-emerald-800 transition-all duration-200"
               >
                 <RotateCcw size={13} />
                 Restore
@@ -486,28 +493,12 @@ function TaskItem({
           </div>
         </div>
 
-        {/* ── Delete confirmation banner ── */}
+        {/* ── Delete confirmation ── */}
         {isDeletePending && (
-          <div
-            className="
-    mt-3 overflow-hidden rounded-xl
-    border border-red-200/60 dark:border-red-700/30
-    bg-gradient-to-r from-red-50/80 via-red-50/40 to-transparent
-    dark:from-red-900/20 dark:via-zinc-900/60 dark:to-zinc-900/20
-    backdrop-blur-sm
-  "
-          >
+          <div className="mt-3 overflow-hidden rounded-xl border border-red-200/60 dark:border-red-700/30 bg-gradient-to-r from-red-50/80 via-red-50/40 to-transparent dark:from-red-900/20 dark:via-zinc-900/60 dark:to-zinc-900/20 backdrop-blur-sm">
             <div className="flex items-center justify-between gap-4 px-4 py-3">
-              {/* Left: icon + message */}
               <div className="flex items-center gap-3">
-                <div
-                  className="
-          flex items-center justify-center
-          w-7 h-7 rounded-lg shrink-0
-          bg-red-100 dark:bg-red-900/30
-          border border-red-200/80 dark:border-red-700/40
-        "
-                >
+                <div className="flex items-center justify-center w-7 h-7 rounded-lg shrink-0 bg-red-100 dark:bg-red-900/30 border border-red-200/80 dark:border-red-700/40">
                   <Trash2
                     size={13}
                     className="text-red-500 dark:text-red-400"
@@ -522,47 +513,22 @@ function TaskItem({
                   </span>
                 </div>
               </div>
-
-              {/* Right: actions */}
               <div className="flex items-center gap-2 shrink-0">
                 <button
                   onClick={onCancelDelete}
-                  className="
-            px-3.5 py-1.5 rounded-lg text-xs font-medium
-            text-zinc-500 dark:text-zinc-400
-            border border-zinc-200/80 dark:border-zinc-700/50
-            hover:bg-white dark:hover:bg-zinc-800
-            hover:text-zinc-800 dark:hover:text-zinc-200
-            hover:border-zinc-300 dark:hover:border-zinc-600
-            hover:shadow-sm
-            active:scale-[0.97]
-            transition-all duration-150
-          "
+                  className="px-3.5 py-1.5 rounded-lg text-xs font-medium text-zinc-500 dark:text-zinc-400 border border-zinc-200/80 dark:border-zinc-700/50 hover:bg-white dark:hover:bg-zinc-800 hover:text-zinc-800 dark:hover:text-zinc-200 active:scale-[0.97] transition-all duration-150"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={onConfirmDelete}
-                  className="
-            flex items-center gap-1.5
-            px-3.5 py-1.5 rounded-lg text-xs font-semibold
-            bg-red-600 hover:bg-red-500
-            dark:bg-red-600/80 dark:hover:bg-red-500/90
-            text-white
-            border border-red-700/30 dark:border-red-500/20
-            shadow-sm shadow-red-900/25 dark:shadow-red-900/40
-            hover:shadow-md hover:shadow-red-900/20
-            active:scale-[0.97]
-            transition-all duration-150
-          "
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-red-600 hover:bg-red-500 dark:bg-red-600/80 dark:hover:bg-red-500/90 text-white border border-red-700/30 shadow-sm shadow-red-900/25 active:scale-[0.97] transition-all duration-150"
                 >
                   <Trash2 size={11} />
                   Delete
                 </button>
               </div>
             </div>
-
-            {/* Bottom accent line */}
             <div className="h-[2px] w-full bg-gradient-to-r from-red-400/40 via-red-300/20 to-transparent dark:from-red-700/50 dark:via-red-800/20 dark:to-transparent" />
           </div>
         )}
