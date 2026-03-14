@@ -15,6 +15,7 @@ function Task() {
   const [showForm, setShowForm] = useState(false); // Task form
   const [tasks, setTasks] = useState([]);
   const [search, setSearch] = useState("");
+  const [deleteCandidate, setDeleteCandidate] = useState(null);
 
   const [priorityFilter, setPriorityFilter] = useState("All");
   const { user, loading } = useSelector((state) => state.auth);
@@ -79,13 +80,21 @@ function Task() {
   };
 
   // Delete task
-  const deleteTask = async (_id) => {
-    await fetch(`${API}/tasks/${_id}`, {
+  const requestDelete = (_id) => {
+    setDeleteCandidate(_id);
+  };
+  const confirmDelete = async () => {
+    if (!deleteCandidate) return;
+    await fetch(`${API}/tasks/${deleteCandidate}`, {
       method: "DELETE",
       credentials: "include",
     });
 
-    setTasks((prev) => prev.filter((task) => task._id !== _id));
+    setTasks((prev) => prev.filter((t) => t._id !== deleteCandidate));
+    setDeleteCandidate(null);
+  };
+  const cancelDelete = () => {
+    setDeleteCandidate(null);
   };
 
   // Add task from form
@@ -198,8 +207,11 @@ function Task() {
 
       <TaskList
         tasks={filteredTasks}
+        deleteCandidate={deleteCandidate}
         onToggleStatus={toggleStatus}
-        onDelete={deleteTask}
+        onDelete={requestDelete}
+        onConfirmDelete={confirmDelete}
+        onCancelDelete={cancelDelete}
         onUpdate={editTask}
       />
     </div>
