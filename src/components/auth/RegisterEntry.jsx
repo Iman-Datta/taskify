@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 
+const API = import.meta.env.VITE_API_URL;
+
 function RegisterEntry({ onLogin, onRegister }) {
   const [formData, setFormData] = useState({
     email: "",
@@ -37,7 +39,7 @@ function RegisterEntry({ onLogin, onRegister }) {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:5000/auth/google";
+    window.location.href = `${API}/google`;
   };
 
   return (
