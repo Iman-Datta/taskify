@@ -40,6 +40,7 @@ function RegisterEntry({ onLogin, onRegister }) {
   };
 
   const handleGoogleLogin = () => {
+    console.log("Google login redirect:", `${API}/auth/google`);
     window.location.href = `${API}/auth/google`;
   };
 
