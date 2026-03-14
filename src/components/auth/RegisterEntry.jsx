@@ -40,8 +40,14 @@ function RegisterEntry({ onLogin, onRegister }) {
   };
 
   const handleGoogleLogin = () => {
-    console.log("Google login redirect:", `${API}/auth/google`);
-    window.location.href = `${API}/auth/google`;
+    const url = `${API}/auth/google`;
+
+    console.log("Google login redirect URL:", url);
+
+    // wait 5 seconds so you can read the console
+    setTimeout(() => {
+      window.location.href = url;
+    }, 5000);
   };
 
   return (
