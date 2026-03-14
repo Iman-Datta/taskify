@@ -41,8 +41,7 @@ function Login({ onLogin, onRegister, onForgot, onLoginSuccess }) {
 
   const handleGoogleLogin = () => {
     const url = `${API}/auth/google`;
-
-    console.log("Google login redirect URL:", url);
+    window.location.href = url;
   };
 
   return (

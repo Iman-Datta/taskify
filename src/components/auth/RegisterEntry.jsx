@@ -40,13 +40,7 @@ function RegisterEntry({ onLogin, onRegister }) {
 
   const handleGoogleLogin = () => {
     const url = `${API}/auth/google`;
-
-    console.log("Google login redirect URL:", url);
-
-    // wait 5 seconds so you can read the console
-    setTimeout(() => {
-      window.location.href = url;
-    }, 5000);
+    window.location.href = url;
   };
 
   return (
