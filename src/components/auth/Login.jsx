@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FcGoogle } from "react-icons/fc";
 
 function Login({ onLogin, onRegister, onForgot, onLoginSuccess }) {
   const [formData, setFormData] = useState({
@@ -34,6 +35,10 @@ function Login({ onLogin, onRegister, onForgot, onLoginSuccess }) {
       console.error(err);
       alert("Login failed");
     }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:5000/auth/google";
   };
 
   return (
@@ -89,16 +94,19 @@ function Login({ onLogin, onRegister, onForgot, onLoginSuccess }) {
       <button
         type="button"
         className="
-          w-full
-          bg-white border border-zinc-300
-          dark:bg-zinc-900 dark:border-zinc-800
-          py-2.5 rounded-xl
-          flex items-center justify-center gap-3
-          hover:bg-zinc-100
-          dark:hover:bg-zinc-800
-          transition
-        "
+    w-full
+    bg-white border border-zinc-300
+    dark:bg-zinc-900 dark:border-zinc-800
+    py-2.5 rounded-xl
+    flex items-center justify-center gap-3
+    hover:bg-zinc-100
+    dark:hover:bg-zinc-800
+    transition
+  "
+        onClick={handleGoogleLogin}
       >
+        <FcGoogle size={20} />
+
         <span className="font-medium text-zinc-700 dark:text-zinc-300">
           Continue with Google
         </span>
