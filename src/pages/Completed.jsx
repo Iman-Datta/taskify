@@ -24,6 +24,7 @@ function Completed() {
           status: task.status,
           deadline: task.deadline,
           priority: task.priority,
+          deletedAt: task.deletedAt,
         }));
 
         setCompletedTasks(formatted);

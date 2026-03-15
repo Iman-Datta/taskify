@@ -134,9 +134,9 @@ function TaskItem({
   const getRemainingTime = (deadline) => {
     if (!deadline) return null;
 
-    const now = new Date();
+    const currentTime = new Date();
     const end = new Date(deadline);
-    const diff = end - now;
+    const diff = end - currentTime;
 
     if (diff <= 0) return "Expired";
 
@@ -148,6 +148,23 @@ function TaskItem({
     if (hours > 0) return `${hours}h ${minutes}m left`;
     return `${minutes}m left`;
   };
+
+  const getDeleteRemaining = (deletedAt) => {
+    if (!deletedAt) return null;
+
+    const currentTime = new Date();
+    const deleteTime = new Date(deletedAt).getTime() + 24 * 60 * 60 * 1000;
+
+    const diff = deleteTime - currentTime;
+
+    if (diff <= 0) return "Deleting soon";
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+    return `${hours}h ${minutes}m`;
+  };
+
   return (
     <div className="space-y-2">
       <div
@@ -503,15 +520,24 @@ function TaskItem({
                 </button>
               </div>
             ) : variant === "trash" ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onRestore?.(task._id)}
-                className="flex items-center gap-1.5 h-8 px-3 text-xs rounded-lg border-zinc-200 dark:border-zinc-700 hover:bg-emerald-50 hover:text-emerald-500 hover:border-emerald-300 dark:hover:bg-emerald-950 dark:hover:border-emerald-800 transition-all duration-200"
-              >
-                <RotateCcw size={13} />
-                Restore
-              </Button>
+              <div className="flex flex-col items-end gap-2">
+                {task.deletedAt && (
+                  <div className="flex items-center gap-1 text-[11px] text-red-500 font-medium">
+                    <Clock size={12} />
+                    Auto delete in {getDeleteRemaining(task.deletedAt)}
+                  </div>
+                )}
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onRestore?.(task._id)}
+                  className="flex items-center gap-1.5 h-8 px-3 text-xs rounded-lg border-zinc-200 dark:border-zinc-700 hover:bg-emerald-50 hover:text-emerald-500 hover:border-emerald-300 dark:hover:bg-emerald-950 dark:hover:border-emerald-800 transition-all duration-200"
+                >
+                  <RotateCcw size={13} />
+                  Restore
+                </Button>
+              </div>
             ) : null}
           </div>
         </div>

@@ -21,8 +21,9 @@ function Trash() {
           description: task.description,
           category: task.category,
           status: task.status,
-          deadline: new Date(task.deadline).toLocaleDateString(),
+          deadline: task.deadline,
           priority: task.priority,
+          deletedAt: task.deletedAt,
         }));
 
         setTrashTasks(formatted);
