@@ -131,6 +131,23 @@ function TaskItem({
     }
   };
 
+  const getRemainingTime = (deadline) => {
+    if (!deadline) return null;
+
+    const now = new Date();
+    const end = new Date(deadline);
+    const diff = end - now;
+
+    if (diff <= 0) return "Expired";
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+    if (days > 0) return `${days}d ${hours}h left`;
+    if (hours > 0) return `${hours}h ${minutes}m left`;
+    return `${minutes}m left`;
+  };
   return (
     <div className="space-y-2">
       <div
@@ -348,13 +365,19 @@ function TaskItem({
                   </div>
                 ) : (
                   variant === "normal" && (
-                    <div className="flex items-center gap-1.5 text-xs text-zinc-400 dark:text-zinc-500">
-                      <Clock className="w-3.5 h-3.5 shrink-0" />
-                      <span>
+                    <div className="flex items-center gap-2 text-xs">
+                      <Clock className="w-3.5 h-3.5 shrink-0 text-zinc-400" />
+
+                      <span className="text-zinc-500 dark:text-zinc-400">
                         {task.deadline &&
-                          !isNaN(new Date(task.deadline)) &&
-                          format(new Date(task.deadline), "dd-MM-yyyy")}
+                          format(new Date(task.deadline), "dd MMM yyyy")}
                       </span>
+
+                      {task.deadline && (
+                        <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-500 text-[10px] font-semibold">
+                          {getRemainingTime(task.deadline)}
+                        </span>
+                      )}
                     </div>
                   )
                 )}

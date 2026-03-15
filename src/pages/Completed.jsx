@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 
 import TaskList from "../components/task/TaskList";
 import TaskHeader from "../components/task/TaskHeader";
+import toast from "react-hot-toast";
 
 const API = import.meta.env.VITE_API_URL;
 
 function Completed() {
   const [completedTasks, setCompletedTasks] = useState([]);
+  const [deleteCandidate, setDeleteCandidate] = useState(null);
 
   useEffect(() => {
     fetch(`${API}/tasks?status=Completed&isDeleted=false`, {
@@ -49,6 +51,25 @@ function Completed() {
     }
   };
 
+  // Delete task
+  const requestDelete = (_id) => {
+    setDeleteCandidate(_id);
+  };
+  const confirmDelete = async () => {
+    if (!deleteCandidate) return;
+    await fetch(`${API}/tasks/${deleteCandidate}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    setCompletedTasks((prev) => prev.filter((t) => t._id !== deleteCandidate));
+    setDeleteCandidate(null);
+    toast.success("Task moved to recycle bin. It will be deleted in 24 hours.");
+  };
+  const cancelDelete = () => {
+    setDeleteCandidate(null);
+  };
+
   return (
     <div className="bg-zinc-100 dark:bg-zinc-950 px-6 py-10 max-w-5xl mx-auto min-h-screen transition-colors duration-300">
       <div className="pt-32">
@@ -57,6 +78,10 @@ function Completed() {
 
       <TaskList
         tasks={completedTasks}
+        deleteCandidate={deleteCandidate}
+        onDelete={requestDelete}
+        onConfirmDelete={confirmDelete}
+        onCancelDelete={cancelDelete}
         variant="completed"
         onRestore={restoreTask}
       />

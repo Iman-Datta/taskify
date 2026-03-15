@@ -12,7 +12,6 @@ import { Toaster } from "react-hot-toast";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <Provider store={store}>
-      // main.tsx — dead simple setup import {Toaster} from "sonner";
       <Toaster
         position="top-right"
         theme="system" // auto light/dark from your <html class="dark">
